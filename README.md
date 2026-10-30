@@ -30,4 +30,16 @@ Bu proje, uçtan uca bir full stack geliştirme pratiği olarak geliştirilmekte
 
 ## Yerelde çalıştırma
 
-> P0-23 – P0-25 tamamlandığında eklenecek.
+Repoyu klonladıktan sonra, commit mesajı hook'unu etkinleştir:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+> Uygulamanın yerelde çalıştırılması P0-23 – P0-25 tamamlandığında eklenecek.
+
+## Lisans
+
+Copyright © 2026. Tüm hakları saklıdır.
+
+Bu repo, geliştirme süresince inceleme ve portföy amacıyla herkese açıktır. Herhangi bir açık kaynak lisansı verilmemiştir; kodun ve dokümanların izinsiz kopyalanması, değiştirilmesi, dağıtılması veya ticari amaçla kullanılması yasaktır.
