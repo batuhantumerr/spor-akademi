@@ -1,5 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- No tests yet; the first ones arrive in P1-08. Microsoft.Testing.Platform fails a run with zero tests
+       (exit code 8), so it is ignored here only. Remove this property when the first test is added. -->
+  <PropertyGroup>
+    <TestingPlatformCommandLineArguments>--ignore-exit-code 8</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\SporAkademi.Api\SporAkademi.Api.csproj" />
   </ItemGroup>
+
 </Project>
