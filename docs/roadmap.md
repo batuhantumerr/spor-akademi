@@ -117,8 +117,8 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 
 ### 3.4 Repo ve walking skeleton
 
-- [ ] **P0-21** Geliştirme ortamı kuruldu ve doğrulandı (.NET 10 SDK, Node LTS, Angular CLI, Docker, Git, IDE, Claude Code); Git kimliği sahibin adıyla ayarlandı; Claude Code'da commit ve PR attribution kapatıldı (DEC-035)
-- [ ] **P0-22** GitHub reposu: public (DEC-072), `main` korumalı, etiketler, milestone'lar, proje panosu, issue ve PR şablonları; AI attribution satırlarını temizleyen `commit-msg` hook'u (DEC-035)
+- [x] **P0-21** Geliştirme ortamı kuruldu ve doğrulandı (.NET 10 SDK, Node LTS, Angular CLI, Docker, Git, IDE, Claude Code); Git kimliği sahibin adıyla ayarlandı; Claude Code'da commit ve PR attribution kapatıldı (DEC-035)
+- [x] **P0-22** GitHub reposu: public (DEC-072), `main` korumalı, etiketler, milestone'lar, proje panosu, issue ve PR şablonları; AI attribution satırlarını temizleyen `commit-msg` hook'u (DEC-035)
 - [ ] **P0-23** Backend solution iskeleti: `Api`, `Application`, `Domain`, `Infrastructure`, test projeleri; `Directory.Build.props`, merkezi paket yönetimi, `.editorconfig`, uyarıları hata sayan analyzer'lar
 - [ ] **P0-24** Frontend iskeleti: standalone component'lerle Angular admin uygulaması, ESLint, Prettier, birim test çalıştırıcısı
 - [ ] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma
@@ -305,3 +305,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-10-27 | MVP kapsamına yetişkin öğrenciler eklendi (P1-22, US-13, US-14) | Okullar yetişkin kursları da veriyor | Sahip |
 | 2026-10-27 | P0-36 (ADR-0009) eklendi | Mimariye genel bakış yazılırken iki tutarsızlık bulundu | Sahip |
 | 2026-10-27 | P0-22: repo private yerine public (DEC-072) | GitHub Free'de branch koruması sadece public repolarda; portföy | Sahip |
+| 2026-10-27 | Lisans verilmemesi kararı (DEC-073) | Ürünün ileride ticari olarak satılması planlanıyor | Sahip |
