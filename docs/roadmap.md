@@ -306,3 +306,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-10-27 | P0-36 (ADR-0009) eklendi | Mimariye genel bakış yazılırken iki tutarsızlık bulundu | Sahip |
 | 2026-10-27 | P0-22: repo private yerine public (DEC-072) | GitHub Free'de branch koruması sadece public repolarda; portföy | Sahip |
 | 2026-10-27 | Lisans verilmemesi kararı (DEC-073) | Ürünün ileride ticari olarak satılması planlanıyor | Sahip |
+| 2026-10-27 | CLAUDE.md'ye GitHub iş akışı eklendi (P0-19 iyileştirmesi) | Issue, branch ve PR'ların agent tarafından açılması | Sahip |
