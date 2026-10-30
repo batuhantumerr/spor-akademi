@@ -1,0 +1,40 @@
+name: Roadmap maddesi
+description: docs/roadmap.md'deki bir maddenin iş takibi
+title: "P?-?? · "
+body:
+  - type: input
+    id: roadmap-item
+    attributes:
+      label: Roadmap maddesi
+      placeholder: P1-26
+    validations:
+      required: true
+  - type: input
+    id: stories
+    attributes:
+      label: İlgili kullanıcı hikayeleri
+      placeholder: US-17
+  - type: textarea
+    id: goal
+    attributes:
+      label: Amaç
+      description: Bu madde tamamlandığında ne mümkün olacak?
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Alt görevler
+      value: |
+        - [ ] Kabul kriterlerinden testler (kırmızı)
+        - [ ] Domain
+        - [ ] Application
+        - [ ] API
+        - [ ] Arayüz
+        - [ ] Hata kodları ve dil dosyası
+        - [ ] Dokümanlar
+        - [ ] Roadmap işaretlendi
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notlar ve açık sorular

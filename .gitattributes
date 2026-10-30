@@ -1,0 +1,6 @@
+# Satır sonlarını normalize et
+* text=auto
+
+# Git hook'ları ve shell betikleri her işletim sisteminde LF olmalı
+.githooks/* text eol=lf
+*.sh text eol=lf
