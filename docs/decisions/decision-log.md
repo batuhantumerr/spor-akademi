@@ -93,6 +93,7 @@
 | DEC-070 | Engelleyici olmayan durumlar başarılı yanıtta `warnings` dizisiyle döner | API A5 | Accepted | 2026-10-27 | — |
 | DEC-071 | Her endpoint tek bir yanıt şekli döner; rol bazlı görünümler ayrı endpoint'tir | API A6 | Accepted | 2026-10-27 | — |
 | DEC-030 | Dokümanlar, ADR'lar, issue/PR açıklamaları ve `CLAUDE.md` Türkçe; kod, tanımlayıcılar, dosya adları, enum değerleri, commit mesajları ve teknik terimler İngilizce | sahibin talebi | Accepted | 2026-10-27 | — |
+| DEC-074 | `CA1707` (isimde alt çizgi) ve `CA1515` (Exe'deki public tipler `internal` olmalı) sadece `tests/` altındaki dosyalar için `.editorconfig`'te kapatılır: test isimleri `Metot_Durum_Sonuç` biçimindedir (ADR-0008) ve xUnit sadece public test sınıflarını bulur. `src/` altında hiçbir analyzer kuralı kapatılmaz | P0-23, sahibin onayı | Accepted | 2026-10-30 | — |
 
 ## Fonksiyonel olmayan gereksinimler
 
