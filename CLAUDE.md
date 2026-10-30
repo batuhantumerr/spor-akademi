@@ -54,7 +54,28 @@ dotnet run --project src/SporAkademi.Api
 
 # Yerel ortamı başlat: P0-25'te doldurulacak
 # Yeni migration: P0-27'de doldurulacak
-# Frontend test / lint: P0-24'te doldurulacak
+```
+
+Frontend komutları `web/admin` içinde çalışır. Node sürümü `.nvmrc`'dedir (DEC-075); yanlış sürümde `npm install` hata verir.
+
+```bash
+# Bağımlılıkları kur (lock dosyasına birebir uyar)
+npm ci
+
+# Geliştirme sunucusu
+npm start
+
+# Birim testleri: bir kez çalışıp çıkar / izleme modunda
+npm run test:ci
+npm test
+
+# Lint (uyarılar dahil hata) ve format kontrolü (CI ile aynı) / düzeltme
+npm run lint
+npm run format:check
+npm run format
+
+# Production build
+npm run build
 ```
 
 ## Mimari kurallar

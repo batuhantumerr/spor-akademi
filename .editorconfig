@@ -17,6 +17,13 @@ trim_trailing_whitespace = false
 [*.{csproj,props,targets,slnx,xml,json,yml,yaml}]
 indent_size = 2
 
+# Angular apps (Angular style guide). Prettier reads these settings too.
+[web/**/*.{ts,js,html,css}]
+indent_size = 2
+
+[web/**/*.ts]
+quote_type = single
+
 [*.cs]
 
 #### Language rules ####
