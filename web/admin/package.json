@@ -13,7 +13,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --watch=false",
-    "lint": "ng lint --max-warnings 0"
+    "lint": "ng lint --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@angular/common": "^22.2.0",

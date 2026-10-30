@@ -5,39 +5,39 @@ const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 
 module.exports = defineConfig([
-    {
-        files: ['**/*.ts'],
-        extends: [
-            eslint.configs.recommended,
-            tseslint.configs.recommended,
-            tseslint.configs.stylistic,
-            angular.configs.tsRecommended,
-        ],
-        processor: angular.processInlineTemplates,
-        rules: {
-            // CONTRIBUTING.md §5: `any` is not used. Already an error in tseslint.configs.recommended; kept explicit.
-            '@typescript-eslint/no-explicit-any': 'error',
-            '@angular-eslint/directive-selector': [
-                'error',
-                {
-                    type: 'attribute',
-                    prefix: 'app',
-                    style: 'camelCase',
-                },
-            ],
-            '@angular-eslint/component-selector': [
-                'error',
-                {
-                    type: 'element',
-                    prefix: 'app',
-                    style: 'kebab-case',
-                },
-            ],
+  {
+    files: ['**/*.ts'],
+    extends: [
+      eslint.configs.recommended,
+      tseslint.configs.recommended,
+      tseslint.configs.stylistic,
+      angular.configs.tsRecommended,
+    ],
+    processor: angular.processInlineTemplates,
+    rules: {
+      // CONTRIBUTING.md §5: `any` is not used. Already an error in tseslint.configs.recommended; kept explicit.
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'app',
+          style: 'camelCase',
         },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'app',
+          style: 'kebab-case',
+        },
+      ],
     },
-    {
-        files: ['**/*.html'],
-        extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
-        rules: {},
-    },
+  },
+  {
+    files: ['**/*.html'],
+    extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
+    rules: {},
+  },
 ]);
