@@ -30,15 +30,31 @@ Bu dosya, bu repoda çalışan yapay zeka agent'ı için kalıcı talimatlardır
 
 ## Komutlar
 
-> P0-23'te solution oluşturulduğunda doldurulacak.
+Testler Microsoft.Testing.Platform ile çalışır (`global.json`); filtre seçenekleri VSTest'teki `--filter` değil, aşağıdakilerdir.
 
 ```bash
-# Yerel ortamı başlat
-# Backend build / test
-# Sadece bir hikayenin testlerini çalıştır: dotnet test --filter "Story=US-17"
-# Format kontrolü
-# Yeni migration
-# Frontend test / lint
+# Backend build (uyarılar hata sayılır)
+dotnet build
+
+# Tüm testler
+dotnet test
+
+# Sadece bir hikayenin testleri
+dotnet test --filter-trait "Story=US-17"
+
+# Sadece bir test projesi (ör. mimari testleri)
+dotnet test --project tests/SporAkademi.ArchitectureTests
+
+# Format kontrolü (CI ile aynı) / düzeltme
+dotnet format --verify-no-changes
+dotnet format
+
+# API'yi yerelde çalıştır
+dotnet run --project src/SporAkademi.Api
+
+# Yerel ortamı başlat: P0-25'te doldurulacak
+# Yeni migration: P0-27'de doldurulacak
+# Frontend test / lint: P0-24'te doldurulacak
 ```
 
 ## Mimari kurallar
