@@ -167,7 +167,7 @@ Her kullanıcı hikayesi bir **dikey dilim (vertical slice)** olarak geliştiril
 - [ ] **P1-10** US-04 Refresh token rotation, tekrar kullanım tespiti, çıkış
 - [ ] **P1-11** US-05 İlk giriş ve şifre değiştirme; admin tarafından şifre sıfırlama
 - [ ] **P1-12** US-01 Platform Admin'in okul ve ilk admin oluşturması; ilk Platform Admin için seed
-- [ ] **P1-13** Angular: uygulama kabuğu, giriş sayfası, token yenilemeli auth interceptor, rol bazlı route guard'lar, role göre layout
+- [ ] **P1-13** Angular: uygulama kabuğu, giriş sayfası, token yenilemeli auth interceptor, rol bazlı route guard'lar, role göre layout; `/api` için dev server proxy'si (ADR-0006, aynı origin); UI kütüphanesi seçimi (ADR-0010)
 - [ ] **P1-14** OpenAPI dokümanı ve build içinde üretilen Angular API client'ı
 
 ### 4.2 İterasyon 1.2 — Okul kurulumu ve gruplar
@@ -307,3 +307,5 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-10-27 | P0-22: repo private yerine public (DEC-072) | GitHub Free'de branch koruması sadece public repolarda; portföy | Sahip |
 | 2026-10-27 | Lisans verilmemesi kararı (DEC-073) | Ürünün ileride ticari olarak satılması planlanıyor | Sahip |
 | 2026-10-27 | CLAUDE.md'ye GitHub iş akışı eklendi (P0-19 iyileştirmesi) | Issue, branch ve PR'ların agent tarafından açılması | Sahip |
+| 2026-10-30 | Node.js sürümü 26 LTS olarak sabitlendi (DEC-075); P0-21'deki "Node LTS" artık Node 26 demek | Angular 22 Node 22.22.0'ı desteklemiyor; Node 24 Maintenance aşamasında, Node 26 Active LTS | Sahip |
+| 2026-10-30 | P1-13'e `/api` dev server proxy'si ve UI kütüphanesi seçimi (ADR-0010) eklendi | P0-24'te kapsam dışı bırakıldılar; kaybolmamaları için | Sahip |

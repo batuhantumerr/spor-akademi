@@ -94,6 +94,7 @@
 | DEC-071 | Her endpoint tek bir yanıt şekli döner; rol bazlı görünümler ayrı endpoint'tir | API A6 | Accepted | 2026-10-27 | — |
 | DEC-030 | Dokümanlar, ADR'lar, issue/PR açıklamaları ve `CLAUDE.md` Türkçe; kod, tanımlayıcılar, dosya adları, enum değerleri, commit mesajları ve teknik terimler İngilizce | sahibin talebi | Accepted | 2026-10-27 | — |
 | DEC-074 | `CA1707` (isimde alt çizgi) ve `CA1515` (Exe'deki public tipler `internal` olmalı) sadece `tests/` altındaki dosyalar için `.editorconfig`'te kapatılır: test isimleri `Metot_Durum_Sonuç` biçimindedir (ADR-0008) ve xUnit sadece public test sınıflarını bulur. `src/` altında hiçbir analyzer kuralı kapatılmaz | P0-23, sahibin onayı | Accepted | 2026-10-30 | — |
+| DEC-075 | Node.js 26 LTS; `.nvmrc` ve `engines` ile sabitlenir. Angular 22 `>=26.0.0`'ı destekliyor; Node 24 2026-10-20'de Maintenance'a geçti (EOL 2028-04-30), Node 26 Active LTS (EOL 2029-04-30) | P0-24, sahibin onayı | Accepted | 2026-10-30 | — |
 
 ## Fonksiyonel olmayan gereksinimler
 
