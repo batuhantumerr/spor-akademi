@@ -83,6 +83,23 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 5. **Roadmap'i güncelle.** Bir madde Definition of Done'ı karşıladığında, aynı PR'da `docs/roadmap.md`'de işaretle.
 6. **Commit:** Conventional Commits, İngilizce. Commit mesajlarına ve PR açıklamalarına `Co-Authored-By`, "Generated with" veya benzeri AI attribution satırları ekleme (DEC-035).
 
+## GitHub iş akışı
+
+GitHub işlemleri `gh` CLI ile yapılır.
+
+1. **Issue:** Bir roadmap maddesine başlarken önce `gh issue list --search "<madde-id>"` ile issue'su var mı kontrol et. Yoksa aç:
+   - Başlık: `<madde-id> · <roadmap'teki kısa başlık>` (ör. `P0-23 · Backend solution iskeleti`)
+   - Gövde: `.github/ISSUE_TEMPLATE/roadmap-item.yml` formundaki alanlar (roadmap maddesi, ilgili hikayeler, amaç, alt görevler)
+   - Milestone: maddenin fazı (ör. `Phase 0 – Foundation (v0.0.1)`)
+   - Etiketler: bir `type:*`; varsa ilgili `module:*` veya `area:*`; faz 1 ve sonrasında hikayenin önceliğine göre `priority:*`
+2. **Branch:** Güncel `main`'den (`git switch main && git pull`), `CONTRIBUTING.md` §2'deki isimle: `<tür>/<issue-no>-<kısa-açıklama>`.
+3. **Commit:** `CONTRIBUTING.md` §3. Küçük ve anlamlı commit'ler.
+4. **PR:** Kendi kontrolünü yapıp testleri çalıştırdıktan sonra push et ve `gh pr create` ile aç:
+   - Başlık: Conventional Commits biçiminde (squash commit mesajı olacak)
+   - Gövde: `.github/pull_request_template.md`'yi doldur; "İlgili" satırında `Closes #<issue-no>` olsun; kontrol listesinde gerçekten yaptıklarını işaretle
+5. **Merge'i sahip yapar.** PR'ı açtıktan sonra dur ve bana bildir. İnceleme yorumlarını aynı branch'te yeni commit'lerle düzelt.
+6. **Merge sonrası:** Ben "merge edildi" dediğimde `git switch main && git pull` yap ve yerel branch'i sil.
+
 ## Asla yapma
 
 - Roadmap'te olmayan bir işe başlamak veya kapsamı kendi başına değiştirmek.
@@ -93,3 +110,5 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - Uyarıları bastırmak, analyzer kurallarını kapatmak veya CI'ı testleri geçirmek için değiştirmek.
 - `main`'e doğrudan push etmek veya force push yapmak.
 - Bir yeniden yapılandırmayı (refactoring) istenen işin içine gizlemek.
+- Bir PR'ı merge etmek veya bir issue'yu elle kapatmak.
+- `--force` ile push etmek veya `gh` komutlarında onay adımlarını atlamak.
