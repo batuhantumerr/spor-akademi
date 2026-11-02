@@ -119,6 +119,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 4. **Açıkla.** Bir işi bitirince Türkçe ve kısaca anlat: ne yaptın, hangi kavramı kullandın ve neden. Kullandığın yeni bir kavram varsa `docs/learning/journal.md` için bir taslak not öner (sahip kendi cümleleriyle yazar).
 5. **Roadmap'i güncelle.** Bir madde Definition of Done'ı karşıladığında, aynı PR'da `docs/roadmap.md`'de işaretle.
 6. **Commit:** Conventional Commits, İngilizce. Commit mesajlarına ve PR açıklamalarına `Co-Authored-By`, "Generated with" veya benzeri AI attribution satırları ekleme (DEC-035).
+7. **Doğrula.** Sürüm, uyumluluk, varsayılan değer veya destek tarihi gibi bilgileri öne sürmeden önce bir komutla (`npm view`, `dotnet --list-sdks` vb.) veya resmi dokümanla doğrula ve kaynağını belirt. Doğrulayamadığın iddiaları planda "doğrulanmadı" diye işaretle.
 
 ## GitHub iş akışı
 
