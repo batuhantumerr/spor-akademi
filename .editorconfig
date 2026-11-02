@@ -1,10 +1,11 @@
 # Code style rules for the whole repository.
 # Rules set to `warning` fail the build because of TreatWarningsAsErrors and EnforceCodeStyleInBuild
-# (Directory.Build.props). Line endings are handled by .gitattributes.
+# (Directory.Build.props). Line endings are LF everywhere (DEC-077); .gitattributes enforces it in Git.
 root = true
 
 [*]
 charset = utf-8
+end_of_line = lf
 indent_style = space
 indent_size = 4
 insert_final_newline = true
