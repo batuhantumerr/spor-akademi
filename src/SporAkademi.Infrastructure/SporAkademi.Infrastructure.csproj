@@ -2,4 +2,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SporAkademi.Application\SporAkademi.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
 </Project>

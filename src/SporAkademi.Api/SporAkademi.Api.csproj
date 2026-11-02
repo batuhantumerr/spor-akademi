@@ -3,4 +3,11 @@
     <ProjectReference Include="..\SporAkademi.Application\SporAkademi.Application.csproj" />
     <ProjectReference Include="..\SporAkademi.Infrastructure\SporAkademi.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Needed only by the dotnet-ef tool, which uses this project as its startup project. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

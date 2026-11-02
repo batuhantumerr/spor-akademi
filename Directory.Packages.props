@@ -3,7 +3,19 @@
   <!-- Central package management: versions live only here, projects reference packages without a version. -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- A version listed here also wins when the package arrives transitively, so every EF Core
+         package resolves to the same version as the dotnet-ef tool (dotnet-tools.json). -->
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
+
+  <!-- Data access (P0-27). The Npgsql provider allows EF Core [10.0.4, 11); the two EF Core entries pin it. -->
+  <ItemGroup>
+    <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.14" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+  </ItemGroup>
 
   <!-- Testing (DEC-061) -->
   <ItemGroup>
