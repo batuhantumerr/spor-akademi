@@ -4,10 +4,10 @@
 
 | Alan | Değer |
 | --- | --- |
-| Durum | `Proposed` |
+| Durum | `Accepted` |
 | Tarih | 2026-11-02 |
 | Karar veren | Batuhan Tümer |
-| İlgili kararlar | DEC-038, ADR-0001 |
+| İlgili kararlar | DEC-078, DEC-038, ADR-0001 |
 | İlgili gereksinimler | NFR-SEC-10, NFR-REL-02, NFR-REL-06, NFR-REL-07 |
 
 ## Bağlam
