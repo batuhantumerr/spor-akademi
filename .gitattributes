@@ -1,5 +1,5 @@
-# Satır sonlarını normalize et
-* text=auto
+# Metin dosyaları depoda ve çalışma kopyasında LF'tir; core.autocrlf ayarı geçersiz kalır (DEC-077)
+* text=auto eol=lf
 
 # Git hook'ları ve shell betikleri her işletim sisteminde LF olmalı
 .githooks/* text eol=lf
