@@ -79,12 +79,22 @@ is_alphanumeric SPOR_AKADEMI_MIGRATOR_PASSWORD ||
   fail "SPOR_AKADEMI_MIGRATOR_PASSWORD must contain only letters and digits; run: scripts/ef.sh --check-env"
 is_port POSTGRES_HOST_PORT || fail "POSTGRES_HOST_PORT must contain only digits"
 
+migrations_dir=src/SporAkademi.Infrastructure/Persistence/Migrations
+adding=false
 extra=()
 if [[ $1 == "migrations" && $2 == "add" ]]; then
+  adding=true
   extra+=(--output-dir Persistence/Migrations)
 fi
 
+# The connection string exists only in dotnet-ef's environment, never in a file or in this shell's output.
 ConnectionStrings__Migrator="Host=127.0.0.1;Port=${POSTGRES_HOST_PORT};Database=spor_akademi;Username=spor_akademi_migrator;Password=${SPOR_AKADEMI_MIGRATOR_PASSWORD}" \
-  exec dotnet ef "$@" "${extra[@]}" \
+  dotnet ef "$@" "${extra[@]}" \
   --project src/SporAkademi.Infrastructure \
   --startup-project src/SporAkademi.Api
+
+# dotnet-ef writes the new migration with CRLF, a BOM and a block-scoped namespace; bring it to the
+# repository style (.editorconfig) so `dotnet format --verify-no-changes` stays clean.
+if [[ $adding == true ]]; then
+  dotnet format src/SporAkademi.Infrastructure --include "$migrations_dir/"
+fi
