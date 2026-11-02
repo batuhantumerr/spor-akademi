@@ -106,6 +106,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-14** ADR-0007 Hata yönetimi: Result pattern ve ProblemDetails
 - [x] **P0-15** ADR-0008 Test stratejisi: test piramidi, Testcontainers, mimari testleri
 - [x] **P0-36** ADR-0009 Modüller arası iletişim ve domain event'lerinin transaction içinde işlenmesi
+- [x] **P0-37** ADR-0011 Production'da migration stratejisi: PR'da SQL incelemesi, deploy'da tek seferlik migration bundle
 - [x] **P0-16** Solution ve modül yapısı → `docs/architecture/overview.md` (C4 context ve container diyagramlarıyla)
 - [x] **P0-17** API'ye genel bakış: kaynaklar, endpoint'ler, kurallar (sürümleme, sayfalama, hatalar, ID'ler) → `docs/api/overview.md`
 
@@ -312,3 +313,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-11-02 | CLAUDE.md'de paket kuralı, paket yükleyen komutları da kapsayacak şekilde genişletildi (P0-19 iyileştirmesi) | P0-24'te `ng add angular-eslint` planda olmayan `@eslint/js` paketini ekledi | Sahip |
 | 2026-11-02 | CLAUDE.md "Çalışma şekli"ne doğrulama kuralı eklendi (P0-19 iyileştirmesi) | P0-24 planında sürüm ve varsayılan değer iddiaları doğrulanmadan yazıldı | Sahip |
 | 2026-11-02 | `.claude/settings.json` izin kuralları ve CLAUDE.md'ye `.env` kuralı eklendi (P0-19 iyileştirmesi) | P0-25'te yerel gizli bilgiler `.env`'e taşındı | Sahip |
+| 2026-11-02 | P0-37 (ADR-0011 production'da migration stratejisi) eklendi | Uygulama kullanıcısı şemayı değiştiremediği için (NFR-SEC-10) uygulama başlarken migration yapılamıyor; P0-31'den önce karar gerekiyor | Sahip |
