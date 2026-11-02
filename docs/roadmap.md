@@ -106,7 +106,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-14** ADR-0007 Hata yönetimi: Result pattern ve ProblemDetails
 - [x] **P0-15** ADR-0008 Test stratejisi: test piramidi, Testcontainers, mimari testleri
 - [x] **P0-36** ADR-0009 Modüller arası iletişim ve domain event'lerinin transaction içinde işlenmesi
-- [x] **P0-37** ADR-0011 Production'da migration stratejisi: PR'da SQL incelemesi, deploy'da tek seferlik migration bundle
+- [x] **P0-37** ADR-0011 Production'da migration stratejisi: PR'da SQL incelemesi, deploy'da tek seferlik migration bundle (#23)
 - [x] **P0-16** Solution ve modül yapısı → `docs/architecture/overview.md` (C4 context ve container diyagramlarıyla)
 - [x] **P0-17** API'ye genel bakış: kaynaklar, endpoint'ler, kurallar (sürümleme, sayfalama, hatalar, ID'ler) → `docs/api/overview.md`
 
