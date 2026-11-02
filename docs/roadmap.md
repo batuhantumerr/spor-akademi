@@ -310,3 +310,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-10-30 | Node.js sürümü 26 LTS olarak sabitlendi (DEC-075); P0-21'deki "Node LTS" artık Node 26 demek | Angular 22 Node 22.22.0'ı desteklemiyor; Node 24 Maintenance aşamasında, Node 26 Active LTS | Sahip |
 | 2026-10-30 | P1-13'e `/api` dev server proxy'si ve UI kütüphanesi seçimi (ADR-0010) eklendi | P0-24'te kapsam dışı bırakıldılar; kaybolmamaları için | Sahip |
 | 2026-11-02 | CLAUDE.md'de paket kuralı, paket yükleyen komutları da kapsayacak şekilde genişletildi (P0-19 iyileştirmesi) | P0-24'te `ng add angular-eslint` planda olmayan `@eslint/js` paketini ekledi | Sahip |
+| 2026-11-02 | CLAUDE.md "Çalışma şekli"ne doğrulama kuralı eklendi (P0-19 iyileştirmesi) | P0-24 planında sürüm ve varsayılan değer iddiaları doğrulanmadan yazıldı | Sahip |
