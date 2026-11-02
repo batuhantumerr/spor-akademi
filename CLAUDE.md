@@ -142,7 +142,7 @@ GitHub işlemleri `gh` CLI ile yapılır.
 - Roadmap'te olmayan bir işe başlamak veya kapsamı kendi başına değiştirmek.
 - Bir kararı (`decision-log.md`) kabul etmek, değiştirmek veya kaldırmak; bir faz geçişini onaylamak. Karar önerebilirsin (`Proposed`), onaylayan sahiptir.
 - Kabul edilmiş bir ADR'ı düzenlemek.
-- Onay almadan yeni bir NuGet veya npm paketi eklemek.
+- Onay almadan yeni bir NuGet veya npm paketi eklemek; paket yükleyen bir komut (`ng add`, `npm create` vb.) çalıştırmadan önce hangi paketleri ekleyeceğini kontrol etmemek.
 - Uygulanmış bir migration'ı düzenlemek veya silmek.
 - Uyarıları bastırmak, analyzer kurallarını kapatmak veya CI'ı testleri geçirmek için değiştirmek.
 - `main`'e doğrudan push etmek veya force push yapmak.
