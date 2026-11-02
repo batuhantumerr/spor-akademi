@@ -124,7 +124,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-24** Frontend iskeleti: standalone component'lerle Angular admin uygulaması, ESLint, Prettier, birim test çalıştırıcısı (#7)
 - [x] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma (#19)
 - [ ] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`)
-- [ ] **P0-27** İlk EF Core migration'ı (migration geçmişi olan boş şema)
+- [x] **P0-27** İlk EF Core migration'ı (migration geçmişi olan boş şema)
 - [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend)
 - [ ] **P0-29** API ve admin uygulaması için production'a hazır Docker imajları (multi-stage build)
 - [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları

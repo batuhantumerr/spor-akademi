@@ -58,7 +58,12 @@ docker compose up -d --wait
 docker compose down
 docker compose down -v
 
-# Yeni migration: P0-27'de doldurulacak
+# EF Core migration'ları: her zaman scripts/ef.sh ile (migrator kullanıcısı, ADR-0011)
+# İlk seferde: dotnet tool restore
+scripts/ef.sh --check-env
+scripts/ef.sh migrations add <Ad>
+scripts/ef.sh migrations script --idempotent
+scripts/ef.sh database update
 ```
 
 Frontend komutları `web/admin` içinde çalışır. Node sürümü `.nvmrc`'dedir (DEC-075); yanlış sürümde `npm install` hata verir.
@@ -95,6 +100,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - **Tenant (ADR-0003):** tenant'a bağlı her entity `ITenantScoped`. `TenantId`'yi elle atama veya filtreleme; altyapı yapar. `IgnoreQueryFilters()` sadece `Tenancy` modülünde. Ham SQL istisnadır ve `tenant_id` koşulunu açıkça içerir.
 - **Domain event'leri (ADR-0009):** aynı transaction içinde işlenir; işleyicileri sadece veritabanı değişikliği yapar, dış sistem (e-posta vb.) çağırmaz.
 - **Kayıt kilitleri (ADR-0005):** öğrenci ve grup satırları sadece `IEnrollmentLocks` üzerinden ve her zaman önce öğrenci, sonra grup sırasıyla kilitlenir.
+- **Migration'lar (ADR-0011):** her zaman `spor_akademi_migrator` ile çalıştırılır (yerelde `scripts/ef.sh`); `postgres` ile çalıştırılırsa uygulama oluşan tablolara erişemez. API `Migrate()` / `EnsureCreated()` çağırmaz. Veritabanı adları snake_case (DEC-079).
 - **Zaman:** `TimeProvider` kullan; `DateTime.Now` / `UtcNow` yasak.
 - **Diğer:** ID'ler UUID v7; para `decimal` + `Money`; genel soft delete yok, iş durumları var (`Archived`, `Left`, `Ended`, `Cancelled`).
 - **API (docs/api/overview.md):** `/api/v1`, durum geçişleri aksiyon endpoint'i (`POST /students/{id}/leave`), her endpoint tek bir yanıt şekli, düzenlenebilir kaynaklarda `version`.
@@ -115,7 +121,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - Antrenöre giden yanıt tiplerinde veli bilgisi veya öğrencinin kendi iletişim bilgisi bulunamaz (DEC-007, DEC-071).
 - Kriptografi kodu yazma; standart .NET bileşenlerini kullan (ADR-0006).
 - Gerçek kişisel veri kullanma; seed ve test verileri sentetik (DEC-031).
-- `.env` dosyasını hiçbir yoldan okuma, içeriğini arama veya yazdırma; gizli bilgi gerekiyorsa sahibe sor. Bu kural `.claude/settings.json`'daki bir deny kuralıyla da destekleniyor, ama o kural bir güvenlik sınırı değil; ona güvenme.
+- `.env` dosyasını hiçbir yoldan okuma, içeriğini arama veya yazdırma; gizli bilgi gerekiyorsa sahibe sor. Bu kural `.claude/settings.json`'daki bir deny kuralıyla da destekleniyor, ama o kural bir güvenlik sınırı değil; ona güvenme. `.env`'i yalnızca içeriğini çıktıya yazmayan onaylı araçlar kullanır (`docker compose`, `scripts/ef.sh`); bunları çalıştırabilirsin, ama gizli bilgiyi yazdıran komutları (`printenv`, `docker compose config`, `docker inspect`, `dotnet user-secrets list`) çalıştırma. Bu listeye yeni bir araç eklemek sahibin onayını gerektirir.
 
 ## Çalışma şekli
 
