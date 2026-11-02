@@ -95,6 +95,7 @@
 | DEC-030 | Dokümanlar, ADR'lar, issue/PR açıklamaları ve `CLAUDE.md` Türkçe; kod, tanımlayıcılar, dosya adları, enum değerleri, commit mesajları ve teknik terimler İngilizce | sahibin talebi | Accepted | 2026-10-27 | — |
 | DEC-074 | `CA1707` (isimde alt çizgi) ve `CA1515` (Exe'deki public tipler `internal` olmalı) sadece `tests/` altındaki dosyalar için `.editorconfig`'te kapatılır: test isimleri `Metot_Durum_Sonuç` biçimindedir (ADR-0008) ve xUnit sadece public test sınıflarını bulur. `src/` altında hiçbir analyzer kuralı kapatılmaz | P0-23, sahibin onayı | Accepted | 2026-10-30 | — |
 | DEC-075 | Node.js 26 LTS; `.nvmrc` ve `engines` ile sabitlenir. Angular 22 `>=26.0.0`'ı destekliyor; Node 24 2026-10-20'de Maintenance'a geçti (EOL 2028-04-30), Node 26 Active LTS (EOL 2029-04-30) | P0-24, sahibin onayı | Accepted | 2026-10-30 | — |
+| DEC-076 | .NET testleri Microsoft.Testing.Platform (MTP) ile çalışır (`global.json`'da `test.runner`). xUnit v3 4.x MTP kullanıyor ve .NET 10 SDK'sı bunu `dotnet test`'te VSTest üzerinden çalıştırmıyor. VSTest paketleri (`Microsoft.NET.Test.Sdk`, `xunit.runner.visualstudio`, `coverlet.collector`) kullanılmaz; kapsam ölçümü `coverlet.MTP` ile yapılır; filtreler `--filter-trait`, `--filter-class` gibi MTP seçenekleridir. Henüz testi olmayan test projeleri, ilk testleri gelene kadar "sıfır test" çıkış kodunu (8) yoksayar | P0-23 (#5), sahibin onayı | Accepted | 2026-10-30 | — |
 
 ## Fonksiyonel olmayan gereksinimler
 
