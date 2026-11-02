@@ -115,6 +115,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - Antrenöre giden yanıt tiplerinde veli bilgisi veya öğrencinin kendi iletişim bilgisi bulunamaz (DEC-007, DEC-071).
 - Kriptografi kodu yazma; standart .NET bileşenlerini kullan (ADR-0006).
 - Gerçek kişisel veri kullanma; seed ve test verileri sentetik (DEC-031).
+- `.env` dosyasını hiçbir yoldan okuma, içeriğini arama veya yazdırma; gizli bilgi gerekiyorsa sahibe sor. Bu kural `.claude/settings.json`'daki bir deny kuralıyla da destekleniyor, ama o kural bir güvenlik sınırı değil; ona güvenme.
 
 ## Çalışma şekli
 
