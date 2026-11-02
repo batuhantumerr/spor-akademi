@@ -120,3 +120,4 @@
 | ID | Konu | Karar verileceği yer |
 | --- | --- | --- |
 | — | Staging ve production için barındırma sağlayıcısı | P0-30 |
+| — | Staging ve production log altyapısı (Seq Individual lisansı tek kullanıcıyla sınırlı; alternatiflerle karşılaştırılacak) | P0-30 |

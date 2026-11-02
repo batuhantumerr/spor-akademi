@@ -36,7 +36,55 @@ Repoyu klonladıktan sonra, commit mesajı hook'unu etkinleştir:
 git config core.hooksPath .githooks
 ```
 
-> Uygulamanın yerelde çalıştırılması P0-23 – P0-25 tamamlandığında eklenecek.
+### Ön koşullar
+
+- [Docker](https://docs.docker.com/get-docker/) (Docker Compose dahil)
+- .NET 10 SDK: sürüm `global.json`'da sabit
+- Node.js 26: sürüm `web/admin/.nvmrc`'de sabit; [fnm](https://github.com/Schniz/fnm) ile kurulması önerilir
+
+### Yerel ortam: PostgreSQL ve Seq
+
+İlk seferde `.env` dosyasını oluştur ve şifreleri değiştir. `.env` repoya girmez.
+
+```bash
+cp .env.example .env
+```
+
+Bilgisayarında 5432 portu başka bir PostgreSQL tarafından kullanılıyorsa, `.env`'de `POSTGRES_HOST_PORT`'u değiştir (ör. `5433`).
+
+Başlatmak için tek komut yeterli. Servisler sağlıklı olana kadar bekler:
+
+```bash
+docker compose up -d --wait
+```
+
+| Servis | Adres | Giriş |
+| --- | --- | --- |
+| PostgreSQL | `127.0.0.1:<POSTGRES_HOST_PORT>`, veritabanı `spor_akademi` | Aşağıdaki kullanıcılar |
+| Seq (loglar) | <http://localhost:8081> | `admin` / `.env`'deki `SEQ_ADMIN_PASSWORD` |
+| Seq log alımı | `http://localhost:5341` | — |
+
+Portlar sadece `127.0.0.1`'e açıktır; ağdaki başka cihazlar erişemez.
+
+```bash
+docker compose down        # durdur (veriler kalır)
+docker compose down -v     # sıfırla: TÜM yerel veritabanı ve log verisi silinir
+docker compose up -d --wait
+```
+
+`.env`'deki şifreler ve veritabanı kullanıcıları sadece ilk başlatmada uygulanır. Şifre değiştirdiysen ortamı sıfırla.
+
+### Veritabanı kullanıcıları
+
+| Kullanıcı | Ne için | Şemayı değiştirebilir mi? |
+| --- | --- | --- |
+| `postgres` | Sadece kurulum ve bakım; uygulama bu kullanıcıyla bağlanmaz | Evet |
+| `spor_akademi_migrator` | Migration'lar; veritabanının sahibi | Evet |
+| `spor_akademi_app` | API'nin çalışma anı bağlantısı; veri okur ve yazar | Hayır (NFR-SEC-10) |
+
+> **Migration'lar her zaman `spor_akademi_migrator` ile çalıştırılır.** Uygulama kullanıcısının tablolara erişimi, sadece migrator'ın oluşturduğu nesneler için otomatik olarak verilir (varsayılan yetkiler). Migration `postgres` kullanıcısıyla çalıştırılırsa, uygulama oluşan tablolara erişemez.
+
+Kullanıcılar ve yetkiler `docker/postgres/initdb/10-create-roles.sh` ile kurulur.
 
 ## Lisans
 

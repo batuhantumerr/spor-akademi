@@ -52,7 +52,12 @@ dotnet format
 # API'yi yerelde çalıştır
 dotnet run --project src/SporAkademi.Api
 
-# Yerel ortamı başlat: P0-25'te doldurulacak
+# Yerel ortam (PostgreSQL, Seq): başlat / durdur / sıfırla (TÜM yerel veriyi siler)
+# İlk seferde: cp .env.example .env
+docker compose up -d --wait
+docker compose down
+docker compose down -v
+
 # Yeni migration: P0-27'de doldurulacak
 ```
 
