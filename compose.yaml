@@ -1,0 +1,45 @@
+# Local development environment: PostgreSQL and Seq (P0-25).
+# Secrets come from .env, which is not committed; copy .env.example to .env first (NFR-SEC-09).
+# Ports are published on 127.0.0.1 only, so other devices on the network cannot reach them.
+name: spor-akademi
+
+services:
+  postgres:
+    image: postgres:18.6-trixie
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?set POSTGRES_SUPERUSER_PASSWORD in .env (see .env.example)}
+      POSTGRES_DB: spor_akademi
+      # Read only by docker/postgres/initdb/10-create-roles.sh on first start (NFR-SEC-10).
+      SPOR_AKADEMI_MIGRATOR_PASSWORD: ${SPOR_AKADEMI_MIGRATOR_PASSWORD:?set SPOR_AKADEMI_MIGRATOR_PASSWORD in .env (see .env.example)}
+      SPOR_AKADEMI_APP_PASSWORD: ${SPOR_AKADEMI_APP_PASSWORD:?set SPOR_AKADEMI_APP_PASSWORD in .env (see .env.example)}
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      # PostgreSQL 18+ images keep data under /var/lib/postgresql/18/docker; the volume goes on the parent.
+      - postgres-data:/var/lib/postgresql
+      - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # TCP on purpose: during initialisation the temporary server listens on the socket only,
+      # so the container turns healthy only after the init scripts have finished.
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-p", "5432", "-U", "postgres", "-d", "spor_akademi"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  seq:
+    image: datalust/seq:2026.1.17526
+    environment:
+      # Accepted by the owner. Individual licence: one person only (Seq EULA §16(g)).
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_ADMIN_PASSWORD:?set SEQ_ADMIN_PASSWORD in .env (see .env.example)}
+    ports:
+      - "127.0.0.1:8081:80"     # UI and API
+      - "127.0.0.1:5341:5341"   # log ingestion
+    volumes:
+      - seq-data:/data
+
+volumes:
+  postgres-data:
+  seq-data:

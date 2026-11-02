@@ -121,7 +121,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-22** GitHub reposu: public (DEC-072), `main` korumalı, etiketler, milestone'lar, proje panosu, issue ve PR şablonları; AI attribution satırlarını temizleyen `commit-msg` hook'u (DEC-035)
 - [x] **P0-23** Backend solution iskeleti: `Api`, `Application`, `Domain`, `Infrastructure`, test projeleri; `Directory.Build.props`, merkezi paket yönetimi, `.editorconfig`, uyarıları hata sayan analyzer'lar (#5)
 - [x] **P0-24** Frontend iskeleti: standalone component'lerle Angular admin uygulaması, ESLint, Prettier, birim test çalıştırıcısı (#7)
-- [ ] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma
+- [x] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma (#19)
 - [ ] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`)
 - [ ] **P0-27** İlk EF Core migration'ı (migration geçmişi olan boş şema)
 - [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend)
