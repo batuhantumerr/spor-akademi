@@ -137,6 +137,8 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 
 GitHub işlemleri `gh` CLI ile yapılır.
 
+GitHub'daki bir duruma bağlı her işlemden önce (branch silmek, bir PR'a push etmek, merge edilmiş koda dayanarak sonraki maddeye başlamak) o durumu `gh pr view <no> --json state` gibi bir komutla doğrula. Bu kural, durumu sahibin bildirdiği durumlarda da geçerlidir. Beklenen durum değilse dur ve sor.
+
 1. **Issue:** Bir roadmap maddesine başlarken önce `gh issue list --search "<madde-id>"` ile issue'su var mı kontrol et. Yoksa aç:
    - Başlık: `<madde-id> · <roadmap'teki kısa başlık>` (ör. `P0-23 · Backend solution iskeleti`)
    - Gövde: `.github/ISSUE_TEMPLATE/roadmap-item.yml` formundaki alanlar (roadmap maddesi, ilgili hikayeler, amaç, alt görevler)
