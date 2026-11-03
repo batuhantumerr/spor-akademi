@@ -123,7 +123,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-23** Backend solution iskeleti: `Api`, `Application`, `Domain`, `Infrastructure`, test projeleri; `Directory.Build.props`, merkezi paket yönetimi, `.editorconfig`, uyarıları hata sayan analyzer'lar (#5)
 - [x] **P0-24** Frontend iskeleti: standalone component'lerle Angular admin uygulaması, ESLint, Prettier, birim test çalıştırıcısı (#7)
 - [x] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma (#19)
-- [x] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`)
+- [x] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`) (#32)
 - [x] **P0-27** İlk EF Core migration'ı (migration geçmişi olan boş şema) (#25)
 - [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend). Tüm dosyaların satır sonuyla bitmesi `.editorconfig`'teki `insert_final_newline = true` ile ve CI'da bir kontrolle zorunlu kılınır.
 - [ ] **P0-29** API ve admin uygulaması için production'a hazır Docker imajları (multi-stage build)
