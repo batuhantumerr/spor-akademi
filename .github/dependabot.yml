@@ -41,11 +41,28 @@ updates:
       npm-minor-and-patch:
         update-types: [minor, patch]
     # Angular major versions are upgraded with `ng update`, which runs migrations that rewrite the code;
-    # Dependabot cannot run them.
+    # Dependabot cannot run them. Packages whose allowed versions are set by Angular move with it.
     ignore:
       - dependency-name: "@angular/*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@angular-devkit/*"
+        update-types: ["version-update:semver-major"]
+      # angular-eslint aligns its major version with Angular's (angular-eslint README).
+      - dependency-name: "angular-eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@angular-eslint/*"
+        update-types: ["version-update:semver-major"]
+      # @angular/build and @angular/compiler-cli accept only "typescript >=6.0 <6.1", so a new minor
+      # version breaks the build as well; patch updates stay allowed.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      # Peer dependency ranges of the installed Angular packages: rxjs ^6.5.3 || ^7.4.0 (@angular/core),
+      # tslib ^2.3.0 and vitest ^4.0.8 || ^5.0.0 (@angular/build).
+      - dependency-name: "rxjs"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tslib"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
         update-types: ["version-update:semver-major"]
     commit-message:
       prefix: chore
