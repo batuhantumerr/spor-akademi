@@ -148,6 +148,8 @@ GitHub işlemleri `gh` CLI ile yapılır.
    - Başlık: Conventional Commits biçiminde (squash commit mesajı olacak)
    - Gövde: `.github/pull_request_template.md`'yi doldur; "İlgili" satırında `Closes #<issue-no>` olsun; kontrol listesinde gerçekten yaptıklarını işaretle
 5. **Merge'i sahip yapar.** PR'ı açtıktan sonra dur ve bana bildir. İnceleme yorumlarını aynı branch'te yeni commit'lerle düzelt.
+   - Açık bir PR'a push etmeden önce PR'ın hâlâ açık olduğunu `gh pr view --json state` ile kontrol et. Kapanmışsa dur ve sor.
+   - Bir PR'a yeni commit ekledikten sonra, "PR güncellendi, merge'e hazır" diyerek açıkça bildir. Sahip, bu bildirimi almadan merge etmez.
 6. **Merge sonrası:** Ben "merge edildi" dediğimde `git switch main && git pull` yap ve yerel branch'i sil.
 
 ## Asla yapma
