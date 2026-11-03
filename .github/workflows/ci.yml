@@ -117,3 +117,6 @@ jobs:
 
       - name: Check final newlines
         run: scripts/check-final-newline.sh
+
+      - name: Check that dotnet-ef matches EF Core
+        run: scripts/check-ef-tool-version.sh

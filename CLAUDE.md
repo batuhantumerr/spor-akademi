@@ -49,9 +49,10 @@ dotnet test --project tests/SporAkademi.ArchitectureTests
 dotnet format --verify-no-changes
 dotnet format
 
-# CI'daki repo kontrolleri: satır sonları, yasaklı paketler (CONTRIBUTING §8)
+# CI'daki repo kontrolleri: satır sonları, yasaklı paketler (CONTRIBUTING §8), dotnet-ef ile EF Core sürümü
 scripts/check-final-newline.sh
 scripts/check-forbidden-packages.sh
+scripts/check-ef-tool-version.sh
 
 # API'yi yerelde çalıştır (uygulama kullanıcısıyla; http://localhost:5073)
 scripts/run-api.sh
