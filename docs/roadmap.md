@@ -125,9 +125,9 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma (#19)
 - [ ] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`)
 - [x] **P0-27** İlk EF Core migration'ı (migration geçmişi olan boş şema) (#25)
-- [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend)
+- [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend). Tüm dosyaların satır sonuyla bitmesi `.editorconfig`'teki `insert_final_newline = true` ile ve CI'da bir kontrolle zorunlu kılınır.
 - [ ] **P0-29** API ve admin uygulaması için production'a hazır Docker imajları (multi-stage build)
-- [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları
+- [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları. Veritabanı rolleri (`spor_akademi_migrator`, `spor_akademi_app`) ilk migration'dan önce oluşturulur.
 - [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği; incelenecek SQL script ve migration bundle aynı CI job'ında, aynı build'den üretilir (ADR-0011)
 - [ ] **P0-32** Geri alma (rollback) bir kez prova edildi ve belgelendi → `docs/operations/runbook.md`
 
@@ -163,7 +163,7 @@ Her kullanıcı hikayesi bir **dikey dilim (vertical slice)** olarak geliştiril
 - [ ] **P1-05** Tenancy: JWT'den tenant bağlamı, global query filter'lar, yazma işlemlerinde koruma, `ITenantScoped`
 - [ ] **P1-06** Hata yönetimi: global exception handler, ProblemDetails, doğrulama hatası formatı
 - [ ] **P1-07** Mimari testleri: katman bağımlılıkları, tenant'a bağlı entity'lerde `TenantId` bulunması (US-02)
-- [ ] **P1-08** Entegrasyon test altyapısı: `WebApplicationFactory`, Testcontainers PostgreSQL, test verisi builder'ları, iki tenant'lı fixture
+- [ ] **P1-08** Entegrasyon test altyapısı: `WebApplicationFactory`, Testcontainers PostgreSQL, test verisi builder'ları, iki tenant'lı fixture. Testcontainers veritabanında roller, migration'lardan önce oluşturulur (P0-25'teki init script'iyle aynı yöntem).
 - [ ] **P1-09** US-03 Giriş yapma, hesap kilitleme dahil
 - [ ] **P1-10** US-04 Refresh token rotation, tekrar kullanım tespiti, çıkış
 - [ ] **P1-11** US-05 İlk giriş ve şifre değiştirme; admin tarafından şifre sıfırlama
@@ -315,3 +315,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-11-02 | `.claude/settings.json` izin kuralları ve CLAUDE.md'ye `.env` kuralı eklendi (P0-19 iyileştirmesi) | P0-25'te yerel gizli bilgiler `.env`'e taşındı | Sahip |
 | 2026-11-02 | P0-37 (ADR-0011 production'da migration stratejisi) eklendi | Uygulama kullanıcısı şemayı değiştiremediği için (NFR-SEC-10) uygulama başlarken migration yapılamıyor; P0-31'den önce karar gerekiyor | Sahip |
 | 2026-11-03 | P0-31'e "SQL script ve bundle aynı CI job'ında, aynı build'den üretilir" kuralı eklendi | P0-27'de `--no-build` ile eski bir build'den üretilen script, migration'ı içermedi; incelenen SQL ile çalışan bundle farklı build'lerden gelmemeli | Sahip |
+| 2026-11-03 | P0-30 ve P1-08'e "veritabanı rolleri migration'lardan önce oluşturulur", P0-28'e "dosyalar satır sonuyla biter; CI'da kontrol edilir" eklendi | P0-27'deki `RevokeAppAccessToMigrationsHistory` migration'ı `spor_akademi_app` rolünü gerektiriyor; satır sonu eksikliği #27 ile #29 arasında çakışmaya yol açtı | Sahip |
