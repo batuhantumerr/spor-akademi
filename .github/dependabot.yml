@@ -1,0 +1,70 @@
+# Dependency update pull requests (P0-28, NFR-SEC-11, DEC-080). Every pull request still passes the
+# required CI checks, and the owner merges it.
+#
+# - Minor and patch updates are grouped into one pull request per ecosystem; major updates come one by one.
+# - cooldown: a new version is proposed only after it has been out for 7 days (14 for major versions), so a
+#   broken or withdrawn release is usually caught before it reaches us. Security updates skip the cooldown.
+# - Commit messages and titles follow Conventional Commits: chore(deps): ... / chore(deps-dev): ...
+version: 2
+
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Istanbul
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+    groups:
+      nuget-minor-and-patch:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: chore
+      include: scope
+    labels: ["type:chore"]
+
+  - package-ecosystem: npm
+    directory: /web/admin
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Istanbul
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+    # Angular major versions are upgraded with `ng update`, which runs migrations that rewrite the code;
+    # Dependabot cannot run them.
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@angular-devkit/*"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: chore
+      include: scope
+    labels: ["type:chore", "area:admin-web"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Istanbul
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+    groups:
+      github-actions-minor-and-patch:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: chore
+      include: scope
+    labels: ["type:chore"]
