@@ -95,6 +95,8 @@ Roadmap: P1-xx · Hikaye: US-xx · Issue: #xx
 - [ ] Roadmap maddesi işaretlendi
 ```
 
+- Dependabot PR'ları bu kuralların istisnasıdır: açıklamaları İngilizcedir ve bot kendi branch'ini rebase eder.
+
 ## 5. Kod stili
 
 - **C#:** `.editorconfig` kuralları; `dotnet format` CI'da kontrol edilir. Uyarılar hata sayılır (NFR-MNT-01).
