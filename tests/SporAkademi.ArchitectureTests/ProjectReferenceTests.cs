@@ -36,9 +36,12 @@ public sealed class ProjectReferenceTests
     {
         var projectFile = Path.Combine(SourceDirectory(), project, $"{project}.csproj");
 
+        // Include paths are written with '\', which is not a directory separator on Linux; normalize it so the
+        // project name is read the same way on every platform.
         var references = XDocument.Load(projectFile)
             .Descendants("ProjectReference")
-            .Select(reference => Path.GetFileNameWithoutExtension(reference.Attribute("Include")!.Value));
+            .Select(reference => Path.GetFileNameWithoutExtension(
+                reference.Attribute("Include")!.Value.Replace('\\', '/')));
 
         references.ShouldBe(expectedReferences, ignoreOrder: true);
     }

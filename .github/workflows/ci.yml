@@ -1,0 +1,96 @@
+# Runs on every pull request to main and on every push to main (P0-28). The job names (backend, frontend)
+# are the status checks that branch protection requires, so rename them only together with the ruleset.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Least privilege: the jobs only read the repository.
+permissions:
+  contents: read
+
+# A new commit on the same pull request cancels the run for the previous one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+    steps:
+      # Actions are pinned to a commit hash, not a movable tag; the comment shows the release it belongs to.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The SDK version comes from global.json.
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Check format
+        run: dotnet format --verify-no-changes --no-restore
+
+      - name: Test
+        run: dotnet test --no-build
+
+      # The model and the migrations must match (ADR-0011). The command does not connect to the database,
+      # but the design-time factory requires a connection string; this one has no password and no server.
+      - name: Check for pending model changes
+        env:
+          ConnectionStrings__Migrator: Host=localhost;Database=spor_akademi;Username=spor_akademi_migrator
+        run: >-
+          dotnet ef migrations has-pending-model-changes --no-build
+          --project src/SporAkademi.Infrastructure
+          --startup-project src/SporAkademi.Api
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web/admin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The Node version comes from .nvmrc (DEC-075); engine-strict makes npm ci fail on any other version.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: web/admin/.nvmrc
+          cache: npm
+          cache-dependency-path: web/admin/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check format
+        run: npm run format:check
+
+      - name: Test
+        run: npm run test:ci
+
+      - name: Build
+        run: npm run build
