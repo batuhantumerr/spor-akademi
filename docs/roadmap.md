@@ -123,12 +123,12 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-23** Backend solution iskeleti: `Api`, `Application`, `Domain`, `Infrastructure`, test projeleri; `Directory.Build.props`, merkezi paket yönetimi, `.editorconfig`, uyarıları hata sayan analyzer'lar (#5)
 - [x] **P0-24** Frontend iskeleti: standalone component'lerle Angular admin uygulaması, ESLint, Prettier, birim test çalıştırıcısı (#7)
 - [x] **P0-25** Docker Compose ile yerel ortam: PostgreSQL, Seq; her şeyi tek komutla başlatma (#19)
-- [ ] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`)
+- [x] **P0-26** Veritabanı bağlantısını kontrol eden sağlık endpoint'leri (`/health/live`, `/health/ready`)
 - [x] **P0-27** İlk EF Core migration'ı (migration geçmişi olan boş şema) (#25)
 - [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend). Tüm dosyaların satır sonuyla bitmesi `.editorconfig`'teki `insert_final_newline = true` ile ve CI'da bir kontrolle zorunlu kılınır.
 - [ ] **P0-29** API ve admin uygulaması için production'a hazır Docker imajları (multi-stage build)
-- [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları. Veritabanı rolleri (`spor_akademi_migrator`, `spor_akademi_app`) ilk migration'dan önce oluşturulur.
-- [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği; incelenecek SQL script ve migration bundle aynı CI job'ında, aynı build'den üretilir (ADR-0011)
+- [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları. Veritabanı rolleri (`spor_akademi_migrator`, `spor_akademi_app`) ilk migration'dan önce oluşturulur. Staging ve production'da `ASPNETCORE_ENVIRONMENT` asla `Development` olmaz; aksi halde hata yanıtlarında stack trace görünür (ADR-0007). Veritabanı yanıt vermezken `/health/ready`'nin yanıt süresi (P0-26'da yerelde 60 sn) Linux sunucuda yeniden ölçülür: `docker pause` ile ve PostgreSQL portuna gelen paketleri sessizce düşüren bir güvenlik duvarı kuralıyla.
+- [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği; incelenecek SQL script ve migration bundle aynı CI job'ında, aynı build'den üretilir (ADR-0011). Deploy sonrası sağlık kontrolü kendi zaman aşımını kullanır (ör. `curl --max-time 10`); zaman aşımı "hazır değil" sayılır. Aynısı NFR-OBS-03'teki uptime monitörü için de geçerli (P0-26: veritabanı yanıt vermezken `/health/ready` 60 sn bekleyebiliyor)
 - [ ] **P0-32** Geri alma (rollback) bir kez prova edildi ve belgelendi → `docs/operations/runbook.md`
 
 ### 3.5 Backlog ve faz geçişi
@@ -162,8 +162,8 @@ Her kullanıcı hikayesi bir **dikey dilim (vertical slice)** olarak geliştiril
 - [ ] **P1-04** Kalıcılık (persistence) temeli: `DbContext`, entity yapılandırmaları, denetim interceptor'ı, `xmin` eşzamanlılık token'ları, commit sonrası domain event yayını
 - [ ] **P1-05** Tenancy: JWT'den tenant bağlamı, global query filter'lar, yazma işlemlerinde koruma, `ITenantScoped`
 - [ ] **P1-06** Hata yönetimi: global exception handler, ProblemDetails, doğrulama hatası formatı
-- [ ] **P1-07** Mimari testleri: katman bağımlılıkları, tenant'a bağlı entity'lerde `TenantId` bulunması (US-02)
-- [ ] **P1-08** Entegrasyon test altyapısı: `WebApplicationFactory`, Testcontainers PostgreSQL, test verisi builder'ları, iki tenant'lı fixture. Testcontainers veritabanında roller, migration'lardan önce oluşturulur (P0-25'teki init script'iyle aynı yöntem).
+- [ ] **P1-07** Mimari testleri: katman bağımlılıkları, tenant'a bağlı entity'lerde `TenantId` bulunması (US-02). `/health/live` ve `/health/ready`, ADR-0006'daki mimari testinin bilinen anonim endpoint listesinde yer alır (production'da da anonim)
+- [ ] **P1-08** Entegrasyon test altyapısı: `WebApplicationFactory`, Testcontainers PostgreSQL, test verisi builder'ları, iki tenant'lı fixture. Testcontainers veritabanında roller, migration'lardan önce oluşturulur (P0-25'teki init script'iyle aynı yöntem). İlk test: `/health/ready` veritabanı varken 200, yokken 503 döner (P0-26'da elle doğrulandı).
 - [ ] **P1-09** US-03 Giriş yapma, hesap kilitleme dahil
 - [ ] **P1-10** US-04 Refresh token rotation, tekrar kullanım tespiti, çıkış
 - [ ] **P1-11** US-05 İlk giriş ve şifre değiştirme; admin tarafından şifre sıfırlama
@@ -317,3 +317,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-11-03 | P0-31'e "SQL script ve bundle aynı CI job'ında, aynı build'den üretilir" kuralı eklendi | P0-27'de `--no-build` ile eski bir build'den üretilen script, migration'ı içermedi; incelenen SQL ile çalışan bundle farklı build'lerden gelmemeli | Sahip |
 | 2026-11-03 | P0-30 ve P1-08'e "veritabanı rolleri migration'lardan önce oluşturulur", P0-28'e "dosyalar satır sonuyla biter; CI'da kontrol edilir" eklendi | P0-27'deki `RevokeAppAccessToMigrationsHistory` migration'ı `spor_akademi_app` rolünü gerektiriyor; satır sonu eksikliği #27 ile #29 arasında çakışmaya yol açtı | Sahip |
 | 2026-11-03 | CLAUDE.md "GitHub iş akışı"na PR durumu kontrolü ve güncelleme bildirimi kuralları eklendi (P0-19 iyileştirmesi) | #25 merge edildikten sonra branch'e commit push edildi; commit'ler `main`'e girmedi ve #27'de yeniden yapıldı | Sahip |
+| 2026-11-03 | P0-30, P0-31, P1-07 ve P1-08'e sağlık endpoint'leriyle ilgili notlar eklendi | P0-26: veritabanı yanıt vermezken `/health/ready` 60 sn bekleyebiliyor; endpoint'ler anonim; otomatik test P1-08'e bırakıldı | Sahip |
