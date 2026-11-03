@@ -91,7 +91,7 @@ Kullanıcılar ve yetkiler `docker/postgres/initdb/10-create-roles.sh` ile kurul
 `scripts/ef.sh`, `dotnet ef`'i migrator kullanıcısıyla çalıştırır. Connection string'i `.env`'den üretir ve hiçbir yere yazdırmaz. Git Bash veya başka bir bash'te çalışır.
 
 ```bash
-dotnet tool restore                           # ilk seferde: dotnet-ef'i dotnet-tools.json'daki sürümle kurar
+dotnet tool restore                           # ilk seferde: dotnet-ef'i .config/dotnet-tools.json'daki sürümle kurar
 scripts/ef.sh --check-env                     # .env'deki şifreler kurala uyuyor mu (sadece harf ve rakam)
 scripts/ef.sh database update                 # bekleyen migration'ları uygula
 scripts/ef.sh migrations add <Ad>             # yeni migration

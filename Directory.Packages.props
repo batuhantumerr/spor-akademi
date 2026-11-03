@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <!-- A version listed here also wins when the package arrives transitively, so every EF Core
-         package resolves to the same version as the dotnet-ef tool (dotnet-tools.json). -->
+         package resolves to the same version as the dotnet-ef tool (.config/dotnet-tools.json). -->
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
 
