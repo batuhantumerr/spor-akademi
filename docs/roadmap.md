@@ -128,7 +128,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [ ] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend)
 - [ ] **P0-29** API ve admin uygulaması için production'a hazır Docker imajları (multi-stage build)
 - [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları
-- [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği
+- [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği; incelenecek SQL script ve migration bundle aynı CI job'ında, aynı build'den üretilir (ADR-0011)
 - [ ] **P0-32** Geri alma (rollback) bir kez prova edildi ve belgelendi → `docs/operations/runbook.md`
 
 ### 3.5 Backlog ve faz geçişi
@@ -314,3 +314,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-11-02 | CLAUDE.md "Çalışma şekli"ne doğrulama kuralı eklendi (P0-19 iyileştirmesi) | P0-24 planında sürüm ve varsayılan değer iddiaları doğrulanmadan yazıldı | Sahip |
 | 2026-11-02 | `.claude/settings.json` izin kuralları ve CLAUDE.md'ye `.env` kuralı eklendi (P0-19 iyileştirmesi) | P0-25'te yerel gizli bilgiler `.env`'e taşındı | Sahip |
 | 2026-11-02 | P0-37 (ADR-0011 production'da migration stratejisi) eklendi | Uygulama kullanıcısı şemayı değiştiremediği için (NFR-SEC-10) uygulama başlarken migration yapılamıyor; P0-31'den önce karar gerekiyor | Sahip |
+| 2026-11-03 | P0-31'e "SQL script ve bundle aynı CI job'ında, aynı build'den üretilir" kuralı eklendi | P0-27'de `--no-build` ile eski bir build'den üretilen script, migration'ı içermedi; incelenen SQL ile çalışan bundle farklı build'lerden gelmemeli | Sahip |
