@@ -100,6 +100,16 @@ scripts/ef.sh migrations script --idempotent  # PR'da incelenecek SQL (CONTRIBUT
 
 Production'da migration'ların nasıl uygulandığı ADR-0011'de anlatılır.
 
+### API
+
+`scripts/run-api.sh`, API'yi `http://localhost:5073` adresinde `spor_akademi_app` kullanıcısıyla çalıştırır. Connection string'i `.env`'den üretir ve hiçbir yere yazdırmaz. Bağlantı bilgisi yoksa API başlamaz.
+
+```bash
+scripts/run-api.sh
+curl http://localhost:5073/health/live    # süreç ayakta: 200 Healthy
+curl http://localhost:5073/health/ready   # veritabanına erişilebiliyor: 200 Healthy, değilse 503 Unhealthy
+```
+
 ## Lisans
 
 Copyright © 2026. Tüm hakları saklıdır.

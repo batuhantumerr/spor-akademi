@@ -49,8 +49,8 @@ dotnet test --project tests/SporAkademi.ArchitectureTests
 dotnet format --verify-no-changes
 dotnet format
 
-# API'yi yerelde çalıştır
-dotnet run --project src/SporAkademi.Api
+# API'yi yerelde çalıştır (uygulama kullanıcısıyla; http://localhost:5073)
+scripts/run-api.sh
 
 # Yerel ortam (PostgreSQL, Seq): başlat / durdur / sıfırla (TÜM yerel veriyi siler)
 # İlk seferde: cp .env.example .env
@@ -121,7 +121,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - Antrenöre giden yanıt tiplerinde veli bilgisi veya öğrencinin kendi iletişim bilgisi bulunamaz (DEC-007, DEC-071).
 - Kriptografi kodu yazma; standart .NET bileşenlerini kullan (ADR-0006).
 - Gerçek kişisel veri kullanma; seed ve test verileri sentetik (DEC-031).
-- `.env` dosyasını hiçbir yoldan okuma, içeriğini arama veya yazdırma; gizli bilgi gerekiyorsa sahibe sor. Bu kural `.claude/settings.json`'daki bir deny kuralıyla da destekleniyor, ama o kural bir güvenlik sınırı değil; ona güvenme. `.env`'i yalnızca içeriğini çıktıya yazmayan onaylı araçlar kullanır (`docker compose`, `scripts/ef.sh`); bunları çalıştırabilirsin, ama gizli bilgiyi yazdıran komutları (`printenv`, `docker compose config`, `docker inspect`, `dotnet user-secrets list`) çalıştırma. Bu listeye yeni bir araç eklemek sahibin onayını gerektirir.
+- `.env` dosyasını hiçbir yoldan okuma, içeriğini arama veya yazdırma; gizli bilgi gerekiyorsa sahibe sor. Bu kural `.claude/settings.json`'daki bir deny kuralıyla da destekleniyor, ama o kural bir güvenlik sınırı değil; ona güvenme. `.env`'i yalnızca içeriğini çıktıya yazmayan onaylı araçlar kullanır (`docker compose`, `scripts/ef.sh`, `scripts/run-api.sh`); bunları çalıştırabilirsin, ama gizli bilgiyi yazdıran komutları (`printenv`, `docker compose config`, `docker inspect`, `dotnet user-secrets list`) çalıştırma. Bu listeye yeni bir araç eklemek sahibin onayını gerektirir.
 
 ## Çalışma şekli
 
