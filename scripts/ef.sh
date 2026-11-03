@@ -85,6 +85,9 @@ extra=()
 if [[ $1 == "migrations" && $2 == "add" ]]; then
   adding=true
   extra+=(--output-dir Persistence/Migrations)
+  # Files written after this marker are the ones dotnet-ef creates or rewrites for the new migration.
+  marker=$(mktemp)
+  trap 'rm -f "$marker"' EXIT
 fi
 
 # The connection string exists only in dotnet-ef's environment, never in a file or in this shell's output.
@@ -93,8 +96,11 @@ ConnectionStrings__Migrator="Host=127.0.0.1;Port=${POSTGRES_HOST_PORT};Database=
   --project src/SporAkademi.Infrastructure \
   --startup-project src/SporAkademi.Api
 
-# dotnet-ef writes the new migration with CRLF, a BOM and a block-scoped namespace; bring it to the
-# repository style (.editorconfig) so `dotnet format --verify-no-changes` stays clean.
+# dotnet-ef writes the new migration with CRLF, a BOM and a block-scoped namespace; bring only the files
+# it just wrote to the repository style (.editorconfig) so `dotnet format --verify-no-changes` stays clean.
 if [[ $adding == true ]]; then
-  dotnet format src/SporAkademi.Infrastructure --include "$migrations_dir/"
+  mapfile -t new_files < <(find "$migrations_dir" -name '*.cs' -newer "$marker")
+  if ((${#new_files[@]} > 0)); then
+    dotnet format src/SporAkademi.Infrastructure --include "${new_files[@]}"
+  fi
 fi
