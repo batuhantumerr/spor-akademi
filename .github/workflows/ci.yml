@@ -1,6 +1,6 @@
 # Runs on every pull request to main and on every push to main (P0-28). The job names (backend, frontend,
-# repo-checks) are the status checks that branch protection requires, so rename them only together with the
-# ruleset.
+# repo-checks, images) are the status checks that branch protection requires, so rename them only together with
+# the ruleset.
 name: CI
 
 on:
@@ -120,3 +120,33 @@ jobs:
 
       - name: Check that dotnet-ef matches EF Core
         run: scripts/check-ef-tool-version.sh
+
+  images:
+    name: images
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    # No secrets are used here; the token stays read-only (workflow permissions) and is not stored on disk.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build API image
+        run: docker build --file docker/api/Dockerfile --tag spor-akademi-api:ci .
+
+      - name: Smoke test API image
+        run: scripts/smoke-test-api-image.sh spor-akademi-api:ci
+
+      # Trivy (DEC-080, GHSA-69fq-xp46-6x23): the action is pinned to the commit of v0.36.0, an immutable
+      # release published after the March 2026 compromise; it installs setup-trivy by commit hash. The Trivy
+      # version is set explicitly (never "latest"); its install script verifies the tarball against the
+      # release's SHA-256 checksums, and Trivy releases are immutable. High and critical findings fail the job.
+      - name: Scan API image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.1
+          image-ref: spor-akademi-api:ci
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          format: table
