@@ -62,6 +62,11 @@ jobs:
           --project src/SporAkademi.Infrastructure
           --startup-project src/SporAkademi.Api
 
+      # Vulnerable NuGet packages need no separate step: every restore above audits direct and transitive
+      # packages, and high or critical findings fail it (Directory.Build.props, DEC-080).
+      - name: Check forbidden packages
+        run: scripts/check-forbidden-packages.sh
+
   frontend:
     name: frontend
     runs-on: ubuntu-24.04
@@ -95,6 +100,11 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # High and critical findings fail the job; lower ones are listed in the output (DEC-080). A new
+      # advisory can fail a build that passed yesterday without any code change.
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
 
   repo-checks:
     name: repo-checks
