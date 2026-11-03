@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using SporAkademi.Api;
 using SporAkademi.Infrastructure;
 using SporAkademi.Infrastructure.Persistence;
+
+PlatformRequirements.EnsureAvailable();
 
 var builder = WebApplication.CreateBuilder(args);
 
