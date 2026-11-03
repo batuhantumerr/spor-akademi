@@ -2,8 +2,9 @@
 # required CI checks, and the owner merges it.
 #
 # - Minor and patch updates are grouped into one pull request per ecosystem; major updates come one by one.
-# - cooldown: a new version is proposed only after it has been out for 7 days (14 for major versions), so a
-#   broken or withdrawn release is usually caught before it reaches us. Security updates skip the cooldown.
+# - cooldown: a new version is proposed only after it has been out for 7 days (14 for major versions of NuGet
+#   and npm packages), so a broken or withdrawn release is usually caught before it reaches us. Security
+#   updates skip the cooldown.
 # - Commit messages and titles follow Conventional Commits: chore(deps): ... / chore(deps-dev): ...
 version: 2
 
@@ -58,9 +59,10 @@ updates:
       day: monday
       time: "06:00"
       timezone: Europe/Istanbul
+    # The SemVer-bump cooldown keys (semver-major-days etc.) are not supported for github-actions; only
+    # default-days is (Dependabot options reference, "Configuration of cooldown").
     cooldown:
       default-days: 7
-      semver-major-days: 14
     groups:
       github-actions-minor-and-patch:
         update-types: [minor, patch]
