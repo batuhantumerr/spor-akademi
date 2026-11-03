@@ -14,4 +14,14 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
+  <!-- Vulnerable packages (NFR-SEC-11, DEC-080). Every restore audits direct and transitive packages. Under
+       TreatWarningsAsErrors, high (NU1903) and critical (NU1904) findings fail the build, and so does NU1900
+       (the vulnerability data could not be read: "could not check" must not pass as "checked, clean").
+       Low (NU1901) and moderate (NU1902) findings stay visible as warnings without failing the build.
+       An advisory that cannot be fixed yet is excepted only with a NuGetAuditSuppress item for its URL,
+       with the owner's approval, the reason and a review date (DEC-080). -->
+  <PropertyGroup>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902</WarningsNotAsErrors>
+  </PropertyGroup>
+
 </Project>

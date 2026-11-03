@@ -49,6 +49,10 @@ dotnet test --project tests/SporAkademi.ArchitectureTests
 dotnet format --verify-no-changes
 dotnet format
 
+# CI'daki repo kontrolleri: satır sonları, yasaklı paketler (CONTRIBUTING §8)
+scripts/check-final-newline.sh
+scripts/check-forbidden-packages.sh
+
 # API'yi yerelde çalıştır (uygulama kullanıcısıyla; http://localhost:5073)
 scripts/run-api.sh
 
