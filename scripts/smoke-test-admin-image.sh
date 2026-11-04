@@ -4,6 +4,7 @@
 # - The image runs as a non-root user and contains no .env file.
 # - / serves index.html with Cache-Control: no-cache.
 # - A client-side route such as /groups/1 also serves index.html (SPA fallback).
+# - The Server header does not reveal the nginx version (server_tokens off).
 # - Hashed bundles are cached as immutable; a missing bundle is 404, not index.html.
 set -euo pipefail
 
@@ -57,6 +58,11 @@ check() {
 check / 200 "Cache-Control: no-cache"
 check / 200 "<app-root>"
 check /groups/1 200 "<app-root>"
+
+# server_tokens off: the Server header names nginx but not its version.
+server=$(curl --silent --head --max-time 10 "$base/" | grep -i '^server:' | tr -d '\r') || fail "/: no Server header"
+[[ $server =~ ^[Ss]erver:\ nginx$ ]] || fail "/: Server header reveals more than 'nginx' ($server)"
+echo "/: $server"
 
 bundle=$(curl --silent --max-time 10 "$base/" | grep -oE 'main-[A-Za-z0-9]+\.js' | head -n 1)
 [[ -n $bundle ]] || fail "index.html references no main-<hash>.js bundle"
