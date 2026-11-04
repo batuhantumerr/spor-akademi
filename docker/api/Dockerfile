@@ -7,12 +7,13 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0.403-noble@sha256:de4fe90a98845d75910b9769
 WORKDIR /src
 
 # Restore first, from the project and build files only, so this layer is reused until a dependency changes.
+# Locked mode: the image gets exactly the packages in the lock files, like CI (P0-38, DEC-080).
 COPY global.json Directory.Build.props Directory.Packages.props .editorconfig ./
-COPY src/SporAkademi.Domain/SporAkademi.Domain.csproj src/SporAkademi.Domain/
-COPY src/SporAkademi.Application/SporAkademi.Application.csproj src/SporAkademi.Application/
-COPY src/SporAkademi.Infrastructure/SporAkademi.Infrastructure.csproj src/SporAkademi.Infrastructure/
-COPY src/SporAkademi.Api/SporAkademi.Api.csproj src/SporAkademi.Api/
-RUN dotnet restore src/SporAkademi.Api/SporAkademi.Api.csproj
+COPY src/SporAkademi.Domain/SporAkademi.Domain.csproj src/SporAkademi.Domain/packages.lock.json src/SporAkademi.Domain/
+COPY src/SporAkademi.Application/SporAkademi.Application.csproj src/SporAkademi.Application/packages.lock.json src/SporAkademi.Application/
+COPY src/SporAkademi.Infrastructure/SporAkademi.Infrastructure.csproj src/SporAkademi.Infrastructure/packages.lock.json src/SporAkademi.Infrastructure/
+COPY src/SporAkademi.Api/SporAkademi.Api.csproj src/SporAkademi.Api/packages.lock.json src/SporAkademi.Api/
+RUN dotnet restore --locked-mode src/SporAkademi.Api/SporAkademi.Api.csproj
 
 COPY src/ src/
 RUN dotnet publish src/SporAkademi.Api/SporAkademi.Api.csproj \
