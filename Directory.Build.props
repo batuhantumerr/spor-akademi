@@ -24,4 +24,11 @@
     <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902</WarningsNotAsErrors>
   </PropertyGroup>
 
+  <!-- Lock files (P0-38, DEC-080): every project's packages.lock.json records the exact version and content
+       hash of each direct and transitive package. A local restore updates them; CI and the image build
+       restore with an explicit locked-mode flag, which fails instead of resolving anything that differs. -->
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
 </Project>
