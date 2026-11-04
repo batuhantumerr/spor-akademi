@@ -150,3 +150,19 @@ jobs:
           severity: HIGH,CRITICAL
           exit-code: "1"
           format: table
+
+      - name: Build admin image
+        run: docker build --file docker/admin/Dockerfile --tag spor-akademi-admin:ci .
+
+      - name: Smoke test admin image
+        run: scripts/smoke-test-admin-image.sh spor-akademi-admin:ci
+
+      - name: Scan admin image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.1
+          image-ref: spor-akademi-admin:ci
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          format: table
