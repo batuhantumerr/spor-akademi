@@ -60,9 +60,11 @@ scripts/check-final-newline.sh
 scripts/check-forbidden-packages.sh
 scripts/check-ef-tool-version.sh
 
-# API imajı: build ve duman testi (veritabanısız; CI'daki images job'ı ile aynı)
+# İmajlar: build ve duman testi (API veritabanısız; CI'daki images job'ı ile aynı)
 docker build --file docker/api/Dockerfile --tag spor-akademi-api:local .
 scripts/smoke-test-api-image.sh spor-akademi-api:local
+docker build --file docker/admin/Dockerfile --tag spor-akademi-admin:local .
+scripts/smoke-test-admin-image.sh spor-akademi-admin:local
 
 # API'yi yerelde çalıştır (uygulama kullanıcısıyla; http://localhost:5073)
 scripts/run-api.sh

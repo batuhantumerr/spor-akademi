@@ -7,7 +7,12 @@
 !Directory.Packages.props
 !.editorconfig
 !src/
+!web/admin/
+!docker/admin/nginx.conf
 
-# Build output of a local build must not override the build inside the image.
+# Dependencies and build output of a local build must not override those inside the image.
 **/bin/
 **/obj/
+web/admin/node_modules/
+web/admin/dist/
+web/admin/.angular/
