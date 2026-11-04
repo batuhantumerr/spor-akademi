@@ -58,12 +58,12 @@ flowchart TB
 
 | Container | Teknoloji | Sorumluluğu | İlgili kararlar |
 | --- | --- | --- | --- |
-| Reverse proxy | P0-30'da seçilecek (otomatik HTTPS sağlayan bir proxy) | HTTPS, HSTS, `/api` isteklerini API'ye, diğerlerini admin uygulamasına yönlendirme. Uygulama ve API aynı origin'den sunulur | DEC-054, NFR-SEC-02 |
+| Reverse proxy | Caddy (otomatik HTTPS) | HTTPS, HSTS, `/api` isteklerini API'ye, diğerlerini admin uygulamasına yönlendirme. Uygulama ve API aynı origin'den sunulur | DEC-054, DEC-084, NFR-SEC-02 |
 | Admin uygulaması | Angular | Okul Admini ve Antrenör arayüzü; mobil öncelikli antrenör ekranları. Access token'ı sadece bellekte tutar | DEC-024, DEC-053, NFR-USA-01 |
 | API | ASP.NET Core, .NET 10 | Tüm iş mantığı, kimlik doğrulama, yetkilendirme. Durumsuz (stateless) | ADR-0001, ADR-0006, NFR-SCL-01 |
 | PostgreSQL | PostgreSQL | Tek veritabanı; her modülün kendi şeması; tüm okullar aynı tablolarda (`TenantId`) | ADR-0003, DEC-038 |
-| Seq | Seq | Yerelde ve sunucuda yapılandırılmış logların aranması | NFR-OBS-01 |
-| Yedek deposu | Sunucu dışı nesne depolama (P0-30'da seçilecek) | Şifreli günlük yedekler, 30 gün | NFR-REL-03 |
+| Seq | Seq | Yerelde ve sunucuda yapılandırılmış logların aranması; sunucuda sadece SSH tüneliyle erişilir | NFR-OBS-01, DEC-086 |
+| Yedek deposu | Cloudflare R2 (sunucu dışı nesne depolama) | Şifreli günlük yedekler, 30 gün | NFR-REL-03, DEC-085 |
 
 ## 3. API'nin içi (C4 – Seviye 3)
 
@@ -199,7 +199,7 @@ sequenceDiagram
 | Staging | VPS, ayrı veritabanı | Sentetik demo verisi (DEC-031) | `main`'e her merge'de otomatik |
 | Production | VPS, ayrı veritabanı | Sentetik demo verisi (faz 4'e kadar, DEC-031) | Elle onaydan sonra, hafta içi 09:00–14:00 (NFR-REL-02) |
 
-Staging ve production'ın aynı sunucuda mı, ayrı sunucularda mı çalışacağı P0-30'da, bütçe (DEC-034) göz önünde tutularak belirlenecek.
+Staging ve production aynı sunucuda çalışır (DEC-082, bütçe: DEC-034).
 
 ## 5. Kalite hedefleri nasıl karşılanıyor?
 
