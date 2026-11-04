@@ -36,6 +36,12 @@ Testler Microsoft.Testing.Platform ile çalışır (`global.json`); filtre seçe
 # Backend build (uyarılar hata sayılır)
 dotnet build
 
+# Bir paketi ekledikten, kaldırdıktan veya sürümünü değiştirdikten sonra lock dosyalarını güncelle (P0-38);
+# CI ve imaj build'i lock dosyasıyla uyuşmayan restore'u reddeder. Lock dosyalarını elle düzenleme.
+dotnet restore --force-evaluate
+# CI ile aynı kilitli restore
+dotnet restore --locked-mode
+
 # Tüm testler
 dotnet test
 

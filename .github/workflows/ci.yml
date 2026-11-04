@@ -32,16 +32,19 @@ jobs:
         with:
           persist-credentials: false
 
-      # The SDK version comes from global.json.
+      # The SDK version comes from global.json. The NuGet package cache is keyed on the lock files (P0-38).
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore tools
         run: dotnet tool restore
 
+      # Locked mode fails when a package resolves differently from packages.lock.json (P0-38, DEC-080).
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore --locked-mode
 
       - name: Build
         run: dotnet build --no-restore
