@@ -1,0 +1,13 @@
+# Allow list (NFR-SEC-09, DEC-081): everything is excluded from the Docker build context, then only what the
+# images need is added back. Secrets such as .env can therefore never reach an image by accident.
+*
+
+!global.json
+!Directory.Build.props
+!Directory.Packages.props
+!.editorconfig
+!src/
+
+# Build output of a local build must not override the build inside the image.
+**/bin/
+**/obj/

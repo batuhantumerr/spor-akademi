@@ -87,3 +87,22 @@ updates:
       prefix: chore
       include: scope
     labels: ["type:chore"]
+
+  # Base images in the Dockerfiles are pinned by tag and digest; Dependabot updates both together.
+  - package-ecosystem: docker
+    directories: ["/docker/*"]
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Istanbul
+    # Only default-days is supported for docker (Dependabot options reference, "Configuration of cooldown").
+    cooldown:
+      default-days: 7
+    groups:
+      docker-minor-and-patch:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: chore
+      include: scope
+    labels: ["type:chore"]
