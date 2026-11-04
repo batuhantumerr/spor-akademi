@@ -144,6 +144,12 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 6. **Commit:** Conventional Commits, İngilizce. Commit mesajlarına ve PR açıklamalarına `Co-Authored-By`, "Generated with" veya benzeri AI attribution satırları ekleme (DEC-035).
 7. **Doğrula.** Sürüm, uyumluluk, varsayılan değer veya destek tarihi gibi bilgileri öne sürmeden önce bir komutla (`npm view`, `dotnet --list-sdks` vb.) veya resmi dokümanla doğrula ve kaynağını belirt. Doğrulayamadığın iddiaları planda "doğrulanmadı" diye işaretle.
 
+## Kapsam disiplini
+
+- Üzerinde çalıştığın roadmap maddesinde olmayan bir iyileştirme fark edersen onu yapma; `type:idea` etiketli bir issue aç ve bana tek cümleyle bildir.
+- İstisnalar: bir güvenlik açığı, veri kaybı riski veya maddenin kabul kriterlerini engelleyen bir sorun. Bunlarda dur ve sor.
+- Bir maddenin kabul kriterleri karşılandıysa iş biter; 'daha iyi olabilir' yeni bir issue'dur.
+
 ## GitHub iş akışı
 
 GitHub işlemleri `gh` CLI ile yapılır.
