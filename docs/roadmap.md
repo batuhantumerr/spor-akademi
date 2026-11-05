@@ -12,7 +12,7 @@ Bu doküman, **hangi fazda neyin** yapılacağının tek doğruluk kaynağıdır
 
 - **Her fazın kapsamı** (özellikleri) şimdi, bu dokümanda belirlenir.
 - **Detaylı görevler** sadece mevcut faz için yazılır. Bir sonraki fazın görevleri, önceki fazda öğrenilenler kullanılarak faz geçişinde detaylandırılır. Buna *rolling-wave planning* denir: her şeyi baştan detaylı planlamak, sıra geldiğinde yanlış olan görevler üretir.
-- Bir fazın kapsamını değiştirmek sadece faz geçişinde ya da değişiklik günlüğüne (bölüm 9) kaydedilip sahip tarafından onaylanan açık bir kapsam değişikliğiyle mümkündür.
+- Bir fazın kapsamını değiştirmek sadece faz geçişinde ya da değişiklik günlüğüne (bölüm 10) kaydedilip sahip tarafından onaylanan açık bir kapsam değişikliğiyle mümkündür.
 
 ### 1.2 Madde ID'leri ve onay kutuları
 
@@ -44,7 +44,7 @@ Bir madde, aşağıdakilerin hepsi doğru olduğunda tamamlanmış sayılır:
 - [ ] Yeni uyarı yok; bağlı bir issue'su olmayan `TODO` yok.
 - [ ] API değişiklikleri OpenAPI dokümanına yansıdı; Angular client yeniden üretildi.
 - [ ] Davranış veya bir karar değiştiyse dokümanlar güncellendi.
-- [ ] Staging'e deploy edildi ve elle kontrol edildi.
+- [ ] Yerelde uçtan uca çalıştırıldı ve elle kontrol edildi. (Deploy bloğu açılınca yerini "Staging'e deploy edildi ve elle kontrol edildi" alır; bkz. bölüm 9 ve DEC-094.)
 - [ ] Roadmap maddesi aynı PR'da işaretlendi.
 
 ### 1.5 Faz geçişleri (phase gate)
@@ -70,7 +70,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 
 | Faz | Adı | Sürüm | Ana çıktı |
 | --- | --- | --- | --- |
-| 0 | Temel | `v0.0.1` | Planlar, kararlar ve production'a otomatik deploy edilen boş bir uygulama |
+| 0 | Temel | `v0.0.1` | Planlar, kararlar ve imajları GHCR'de yayımlanan, yerelde çalışan boş bir uygulama |
 | 1 | MVP | `v0.1.0` | Admin ve antrenörler için okullar, gruplar, öğrenciler, kayıt ve yoklama |
 | 2 | İş mantığı derinliği | `v0.2.0` | Online ödeme, bildirimler, arka plan işleri, dosya depolama, cache |
 | 3 | Veli deneyimi | `v0.3.0` | React veli uygulaması, gerçek zamanlı güncellemeler, dashboard'lar, çoklu dil |
@@ -128,22 +128,22 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 - [x] **P0-28** CI pipeline'ı: her PR'da restore, build, format kontrolü, lint, testler (backend ve frontend). Tüm dosyaların satır sonuyla bitmesi: ayar `.editorconfig`'te zaten var (`insert_final_newline = true`); CI kontrolüyle zorunlu kılınır. (#35, #36, #40)
 - [x] **P0-29** API ve admin uygulaması için production'a hazır Docker imajları (multi-stage build) (#49, #52)
 - [x] **P0-38** NuGet lock dosyaları: `packages.lock.json`, CI'da `--locked-mode` ve NuGet önbelleği; lock dosyalarının Windows ve Linux'ta aynı üretildiği doğrulanır (#55)
-- [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları. Veritabanı rolleri (`spor_akademi_migrator`, `spor_akademi_app`) ilk migration'dan önce oluşturulur. Staging ve production'da `ASPNETCORE_ENVIRONMENT` asla `Development` olmaz; aksi halde hata yanıtlarında stack trace görünür (ADR-0007). Veritabanı yanıt vermezken `/health/ready`'nin yanıt süresi (P0-26'da yerelde 60 sn) Linux sunucuda yeniden ölçülür: `docker pause` ile ve PostgreSQL portuna gelen paketleri sessizce düşüren bir güvenlik duvarı kuralıyla.
-- [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği; incelenecek SQL script ve migration bundle aynı CI job'ında, aynı build'den üretilir (ADR-0011). Deploy sonrası sağlık kontrolü kendi zaman aşımını kullanır (ör. `curl --max-time 10`); zaman aşımı "hazır değil" sayılır. Aynısı NFR-OBS-03'teki uptime monitörü için de geçerli (P0-26: veritabanı yanıt vermezken `/health/ready` 60 sn bekleyebiliyor)
-- [ ] **P0-32** Geri alma (rollback) bir kez prova edildi ve belgelendi → `docs/operations/runbook.md`
 
 ### 3.5 Backlog ve faz geçişi
 
-- [ ] **P0-33** Faz 1'in her maddesi için GitHub issue'su açıldı
+- [ ] ~~**P0-33** Faz 1'in her maddesi için GitHub issue'su açıldı~~ — iptal: issue'lar her maddeye başlanırken açılıyor (CLAUDE.md, GitHub iş akışı), bkz. değişiklik günlüğü
 - [ ] **P0-34** `v0.0.1` etiketi
 - [ ] **P0-35** Faz 0 geçişi → `docs/phases/phase-0-gate.md`, sahip tarafından onaylandı
 
 **Çıkış kriterleri**
 
 - Tüm planlama dokümanları onaylı ve repoda.
-- Bir PR açmak CI'ı otomatik olarak çalıştırır; `main`'e merge staging'e deploy eder; production deploy'u onaydan sonra çalışır.
-- Production'da `https://<alan-adı>/health/ready` sağlıklı yanıt döner.
+- CI tüm kontrolleri zorunlu kılıyor: zorunlu check'ler geçmeden `main`'e merge edilemiyor.
+- İmajlar (API, admin, migrator) `main`'den GHCR'de yayımlanıyor.
+- Uygulama yerelde, README'deki komutlarla çalışıyor.
 - Yeni bir geliştirici (veya yeni bir agent oturumu) README ile projeyi 15 dakikanın altında yerelde başlatabilir.
+
+P0-30, P0-31'in kalanı ve P0-32 Deploy bloğuna (bölüm 9) taşındı; Faz 0 geçişi onlara bağlı değil (DEC-094).
 
 ---
 
@@ -208,15 +208,16 @@ Her kullanıcı hikayesi bir **dikey dilim (vertical slice)** olarak geliştiril
 
 - [ ] **P1-35** Tenant izolasyon test paketi: her endpoint başka bir okulun kullanıcısı olarak çağrılır
 - [ ] **P1-36** Kritik akışlar için uçtan uca testler (Playwright): giriş, grup kurma, kayıt, yoklama alma
-- [ ] **P1-37** MVP güvenlik kontrol listesi: şifre hash'leme, token saklama, CORS, sadece HTTPS, repoda gizli bilgi olmaması, bağımlılık güvenlik açığı taraması
+- [ ] **P1-37** MVP güvenlik kontrol listesi: şifre hash'leme, token saklama, CORS, sadece HTTPS (sunucu gerektiren kontrolü Deploy bloğunda, bölüm 9), repoda gizli bilgi olmaması, bağımlılık güvenlik açığı taraması
 - [ ] **P1-38** İki okul için gerçekçi demo verisi üreten seed betiği
-- [ ] **P1-39** Sürüm notları ve `CHANGELOG.md`, `v0.1.0` etiketi, production deploy
+- [ ] **P1-39** Sürüm notları ve `CHANGELOG.md`, `v0.1.0` etiketi (production deploy Deploy bloğunda, bölüm 9)
 - [ ] **P1-40** Faz 1 geçişi → `docs/phases/phase-1-gate.md`, sahip tarafından onaylandı
 
 **Çıkış kriterleri**
 
 - Tüm Must hikayeleri tamamlandı; Should ve Could hikayeleri tamamlandı ya da açıkça taşındı.
 - `vision.md`'deki (bölüm 7) MVP başarı kriterleri karşılandı ve gösterildi.
+- Uygulama yerelde uçtan uca çalışır (Deploy bloğu açılana kadar production yerine; DEC-094).
 - Tüm test paketi CI'da 10 dakikanın altında çalışıyor.
 
 ---
@@ -295,7 +296,36 @@ Her kullanıcı hikayesi bir **dikey dilim (vertical slice)** olarak geliştiril
 
 ---
 
-## 9. Değişiklik günlüğü
+## 9. Deploy bloğu (zamanlanmamış)
+
+Sunucu, alan adı ve R2'nin ne zaman alınacağı belli değil (DEC-094). Bu bölümdeki maddeler hiçbir faza bağlı değildir ve **hiçbir faz geçişi onlara bağlı değildir**. Sunucu alındığında çalışma buradan devam eder; o zaman Definition of Done'daki staging maddesi de geri gelir (bölüm 1.4). Maddelerin ID'leri değişmez (bölüm 1.2).
+
+**Maddeler**
+
+- [ ] **P0-30** Sunucu: VPS, alan adı, HTTPS (reverse proxy), güvenlik duvarı, root olmayan deploy kullanıcısı, staging ve production ortamları. Veritabanı rolleri (`spor_akademi_migrator`, `spor_akademi_app`) ilk migration'dan önce oluşturulur. Staging ve production'da `ASPNETCORE_ENVIRONMENT` asla `Development` olmaz; aksi halde hata yanıtlarında stack trace görünür (ADR-0007). Veritabanı yanıt vermezken `/health/ready`'nin yanıt süresi (P0-26'da yerelde 60 sn) Linux sunucuda yeniden ölçülür: `docker pause` ile ve PostgreSQL portuna gelen paketleri sessizce düşüren bir güvenlik duvarı kuralıyla.
+- [ ] **P0-31** CD pipeline'ı: `main`'e gelen kodun staging'e otomatik deploy'u, production'a elle onayla deploy, deploy sonrası sağlık kontrolü, migration'lardan önce veritabanı yedeği; incelenecek SQL script ve migration bundle aynı CI job'ında, aynı build'den üretilir (ADR-0011). Deploy sonrası sağlık kontrolü kendi zaman aşımını kullanır (ör. `curl --max-time 10`); zaman aşımı "hazır değil" sayılır. Aynısı NFR-OBS-03'teki uptime monitörü için de geçerli (P0-26: veritabanı yanıt vermezken `/health/ready` 60 sn bekleyebiliyor)
+- [ ] **P0-32** Geri alma (rollback) bir kez prova edildi ve belgelendi → `docs/operations/runbook.md`
+
+**P0-31'in tamamlanan kısımları:** imajların GHCR'ye gönderilmesi (#58) ve aynı build'den migration bundle'ı ile SQL script'i üreten migrator imajı (#61).
+
+**Deploy hazırlığının kalan parçaları** (sunucu gerektirmeyen, yerelde doğrulanabilen kısımlar; ilk iş bunlar yapılır):
+
+- Production compose dosyası ve Caddy yapılandırması (P0-30, #53). Onaylanmış plan: iki ortam için tek compose dosyası; ortam başına ayrı PostgreSQL (DEC-090); Caddy (DEC-084) `app.` ve `staging.` alt alan adlarını yönlendirir, kök alan adı `app.`'e gider (DEC-087); `/api/*` ve `/health/*` API'ye, gerisi admin'e; HSTS (`includeSubDomains` olmadan); sadece Caddy port yayımlar; migrator tek seferlik bir compose profilinde; bütün yapıyı yerelde `*.localhost` ve `tls internal` ile kontrol eden bir duman testi, CI'ın `images` job'ında.
+- Şifreli yedek betiği (P0-31, #56): age ile açık anahtara şifreleme (DEC-091), geçici test anahtarıyla geri yükleme kontrolü.
+
+**Bu blokla birlikte bekleyen kararlar ve notlar**
+
+- **Üçüncü taraf imaj taraması:** Caddy ve PostgreSQL imajları da Trivy ile aynı eşikle taranır (DEC-080). Taramanın 2026-11-05 tarihli bulguları ve sahibin istisna kararları #53'te: `gosu`'nun Go standart kütüphanesindeki 25 CVE için ortak gerekçeyle 3 ay; brotli ve curl için 2 hafta; Caddy'deki go-jose (CVE-2026-116587) için 2 hafta. İstisnalar `.trivyignore.yaml`'da `expired_at` ile tutulur ve kararı bir DEC olarak kaydedilir; süreler blok açıldığında, o günkü bulgulara göre yeniden belirlenir.
+- **Caddy sürümü:** blok açıldığında cooldown'u (DEC-080) geçmiş en güncel sürüm, tag ve digest ile.
+- **Staging** herkese açıktır; içinde sadece sentetik veri bulunur (DEC-031).
+- **Seq:** loglama eklendiğinde (P1-03) Seq de production compose'a, sadece `127.0.0.1`'e bağlı olarak eklenir (DEC-086).
+- **Production compose'un yerel yarısı:** yerel compose'a migrator, API ve admin servislerini yerelde build edilen imajlardan çalıştıran bir profil; uygulama yerelde tek komutla (`docker compose --profile app up -d --wait`) çalışır ve yazılan imajlar ile migration bundle'ı yerelde de kullanılır.
+- **Sadece HTTPS (P1-37):** HTTP→HTTPS yönlendirmesi, HSTS ve TLS 1.2+ (NFR-SEC-02) sunucuda doğrulanır.
+- **Production deploy (P1-39):** `v0.1.0` production'a bu blok açıldıktan sonra deploy edilir.
+
+---
+
+## 10. Değişiklik günlüğü
 
 Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 
@@ -326,3 +356,4 @@ Kapsamdaki veya onaylanmış bir plandaki her değişiklik buraya kaydedilir.
 | 2026-11-04 | Faz 0'ın kalan sırası: P0-29'un son PR'ı (#52); P0-38; deploy hazırlığı (P0-30 ve P0-31'in sunucu gerektirmeyen, yerelde doğrulanabilen kısımları: GHCR'ye imaj gönderme, aynı build'den migration bundle'ı, production compose dosyası ve Caddy yapılandırması, şifreli yedek betiği); P0-33; en son P0-30, P0-31'in kalanı (deploy workflow'u), P0-32, P0-34 ve P0-35. P0-30 ve deploy hazırlığının kararları DEC-082 – DEC-091 olarak kayda geçti | Sunucu, alan adı ve R2 şimdilik alınamıyor; satın alma ve hesaplar en sona kaldı. Sunucu olmadan test edilemeyen hiçbir şey şimdi hazırlanmaz | Sahip |
 | 2026-11-05 | P1-04'e "migrator duman testindeki tablo erişim kontrolünün ilk modül tablosuyla çalıştığı kırmızı demoyla gösterilir" eklendi | P0-31'de (#61) eklenen kontrol, henüz hiç modül tablosu olmadığı için şu an hiçbir tabloyu kontrol etmiyor | Sahip |
 | 2026-11-05 | P1-08'e "Testcontainers aynı PostgreSQL imajını kullanır ve imajı `compose.yaml`'dan okur (tek kaynak)" eklendi | PostgreSQL her yerde Alpine varyantına geçti: glibc (Debian) ve musl (Alpine) metni farklı sıralar ve karşılaştırır; Türkçe isim araması ve sıralaması (DEC-013) yerelde, testlerde ve production'da aynı davranmalı. Debian varyantında düzeltilmemiş çok sayıda high/critical açık vardı (P0-30, #53) | Sahip |
+| 2026-11-05 | Deploy, zamanlanmamış bir bloğa (bölüm 9) taşındı: P0-30, P0-31'in kalanı (deploy workflow'u), P0-32, deploy hazırlığının kalan iki parçası (production compose ve Caddy, yedek betiği), üçüncü taraf imaj taraması ve istisnaları. Faz 0'ın çıkış kriterleri, Faz 1'in çıkış kriterleri, `vision.md` §7 ve Definition of Done'daki staging maddesi "yerelde uçtan uca" olarak değişti. P0-33 iptal edildi (DEC-094) | Sunucu alımının ne zaman yapılacağı belli değil; hiçbir şey ona bağlı kalmamalı. P0-33: issue'lar her maddeye başlanırken açılıyor | Sahip |
