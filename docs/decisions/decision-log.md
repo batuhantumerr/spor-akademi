@@ -130,6 +130,7 @@
 | DEC-035 | Git geçmişinde, PR'larda ve dokümanlarda yazar, sahip ve onaylayan olarak sadece sahibin adı geçer; Claude Code attribution'ı kapalıdır ve bir `commit-msg` hook'u AI attribution satırlarını temizler | sahibin talebi | Accepted | 2026-10-27 | — |
 | DEC-072 | GitHub reposu geliştirme boyunca **public** olur: GitHub Free'de branch koruması ve environment onay kuralları sadece public repolarda var; Actions dakikaları public repolarda ücretsiz; portföy olarak görünür. Repoda gizli bilgi ve gerçek kişisel veri bulunmaz (NFR-SEC-09, DEC-031). Ürün ticari olarak yayına alındığında repo private yapılır (ücretli plan gerekir) | P0-22 planlaması, sahibin kararı | Accepted | 2026-10-27 | — |
 | DEC-073 | Repoya açık kaynak lisansı eklenmez; README'de "Tüm hakları saklıdır" notu bulunur. Public olması, kodun kullanım hakkı verildiği anlamına gelmez | Sahibin kararı | Accepted | 2026-10-27 | — |
+| DEC-094 | Sunucu alımı belirsiz; deploy zamanlanmamış bir bloğa taşındı ve faz geçişleri ona bağlı değil. Blok (roadmap bölüm 9): P0-30, P0-31'in kalanı (deploy workflow'u), P0-32, production compose ve Caddy, şifreli yedek betiği, üçüncü taraf imaj taraması ve istisnaları. O zamana kadar fazların çıkış kriterleri ve Definition of Done "yerelde uçtan uca çalışır" ölçütünü kullanır; sunucu alındığında staging maddesi Definition of Done'a geri gelir | roadmap, sahibin kararı | Accepted | 2026-11-05 | — |
 
 ## Bekleyenler
 

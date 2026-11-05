@@ -94,14 +94,14 @@ v0.1.0 şu koşullar sağlandığında tamamlanmış sayılır:
 - İki farklı okul oluşturulabilir ve aynı anda kullanılabilir; otomatik testler hiçbirinin diğerinin verisine erişemediğini kanıtlar.
 - Bir Okul Admini eksiksiz bir grup kurabilir (branş, tesis, antrenör, program) ve kontenjanı aşmadan öğrenci kaydedebilir.
 - Bir Antrenör giriş yapabilir, sadece kendi gruplarını görür ve yoklama alabilir.
-- Uygulama production'da HTTPS arkasında çalışır ve CI/CD pipeline'ı ile otomatik deploy edilir.
+- Uygulama yerelde uçtan uca çalışır. (Production'da HTTPS arkasında çalışma ve otomatik deploy, sunucu alınınca Deploy bloğuyla gelir: roadmap bölüm 9, DEC-094.)
 - Her Must kullanıcı hikayesinin geçen kabul testleri vardır.
 
 ## 8. Yol haritası
 
 | Faz | Odak |
 | --- | --- |
-| Faz 0 | Planlama, dokümantasyon, repo, production'da çalışan walking skeleton |
+| Faz 0 | Planlama, dokümantasyon, repo, yerelde çalışan walking skeleton (deploy: roadmap bölüm 9) |
 | Faz 1 | MVP (bu doküman) |
 | Faz 2 | Derinlemesine aidat yönetimi, online ödeme, arka plan işleri, bildirimler, dosya depolama, cache |
 | Faz 3 | Veli uygulaması (React PWA), gerçek zamanlı özellikler, dashboard'lar, çoklu dil |
