@@ -42,10 +42,40 @@ Tamamlanmayan maddeler ve nedenleri:
 | Çıkış kriteri (roadmap'ten) | Karşılandı mı? | Kanıt |
 | --- | --- | --- |
 | Tüm planlama dokümanları onaylı ve repoda | Evet | Bölüm 1, P0-01 – P0-20 |
-| CI tüm kontrolleri zorunlu kılıyor: zorunlu check'ler geçmeden `main`'e merge edilemiyor | **Kısmen** | `main`'in ruleset'i `backend`, `frontend` ve `repo-checks`'i zorunlu kılıyor. "Branch güncel olmalı" kuralı da açık (`gh api repos/batuhantumerr/spor-akademi/rules/branches/main`, 2026-11-05). **`images` job'ı zorunlu değil.** İmajların duman testleri ve Trivy taraması (DEC-080) bu job'da çalışıyor; yani high/critical bir bulgu merge'i engellemiyor, sadece `main`'deki yayımlamayı durduruyor. Öneri: `images` ruleset'e zorunlu check olarak eklenir (sahip yapar) ve CLAUDE.md'deki "merge'e hazır" listesi güncellenir. |
+| CI tüm kontrolleri zorunlu kılıyor: zorunlu check'ler geçmeden `main`'e merge edilemiyor | Evet | `main`'in ruleset'i `backend`, `frontend`, `repo-checks` ve `images`'ı (kaynak GitHub Actions) zorunlu kılıyor; "branch güncel olmalı" kuralı açık (`gh api repos/batuhantumerr/spor-akademi/rules/branches/main`, 2026-11-05). `images`'ı sahip 2026-11-05'te ekledi. Bu taslak hazırlanırken `images` zorunlu değildi; duman testleri ve Trivy (DEC-080) merge'i engellemiyordu. CLAUDE.md'deki "merge'e hazır" listesi buna göre güncellendi. |
 | İmajlar (API, admin, migrator) `main`'den GHCR'de yayımlanıyor | Evet | `main` run 42025184307 (`5fa28a4`) başarılı. Paketlerin public olduğu ve kimlik bilgisi olmadan çekilebildiği #58 ve #61'de doğrulandı. |
-| Uygulama yerelde, README'deki komutlarla çalışıyor | Evet | 2026-11-05: `docker compose up -d --wait` (PostgreSQL Alpine, Seq), `scripts/ef.sh database update`, `scripts/run-api.sh` ile `/health/ready` 200, `npm start` ile admin `http://localhost:4200/` 200 |
-| Yeni bir geliştirici README ile projeyi 15 dakikanın altında yerelde başlatabilir | **Ölçülmedi** | Öneri: sahip temiz bir klonla süreyi bir kez ölçer ve buraya yazar |
+| Uygulama yerelde, README'deki komutlarla çalışıyor | **Kısmen** | Çalışan kopyada 2026-11-05'te çalıştı: compose, `scripts/ef.sh database update`, `scripts/run-api.sh` ile `/health/ready` 200, `npm start` ile admin 200. Temiz klonda ise README'yi adım adım izlemek yetmiyor; aşağıdaki iki eksik var. |
+| Yeni bir geliştirici README ile projeyi 15 dakikanın altında yerelde başlatabilir | Evet, iki eksik giderilerek | Temiz klon, 2026-11-05: klondan admin açılana kadar **84 sn**. Ayrıntılar aşağıda. |
+
+**Temiz klon ölçümü (2026-11-05).** Repo geçici bir klasöre klonlandı ve README adım adım izlendi.
+
+Ortam, yeni bir makineye mümkün olduğunca yakın kuruldu:
+- NuGet paket klasörü ve npm önbelleği boş geçici klasörlere yönlendirildi.
+- PostgreSQL ve Seq imajları silinip yeniden çekildi.
+
+Sınırlar:
+- Ön koşullar (Docker, .NET SDK, Node) kuruluydu, süreye dahil değil.
+- NuGet'in HTTP önbelleği sıcaktı. Gerçekten yeni bir makinede restore birkaç dakika daha sürebilir.
+
+Aynı makinede çalıştığı için klonun compose proje adı farklıydı (`COMPOSE_PROJECT_NAME`); README'den tek sapma bu.
+
+| Adım (README sırası) | Süre (başlangıçtan) | Sonuç |
+| --- | --- | --- |
+| `git clone`, `git config core.hooksPath .githooks` | 1 sn | Tamam |
+| `cp .env.example .env`, şifreler `openssl rand -hex 24` ile | 2 sn | Tamam. Bu makinede 5432'yi Windows'a kurulu başka bir PostgreSQL kullanıyor; README'deki not izlenerek `POSTGRES_HOST_PORT=5433` yapıldı. |
+| `docker compose up -d --wait` (imajlar çekildi) | 20 sn | Tamam |
+| `dotnet tool restore`, `scripts/ef.sh --check-env` | 21 sn | Tamam |
+| `scripts/ef.sh database update` | 22 sn | **Başarısız** (`NETSDK1004`, `project.assets.json` yok). `dotnet ef` kendi restore'unu yapmıyor; README'de `ef.sh`'tan önce restore veya build adımı yok. |
+| `dotnet restore` (README'de yok), `ef.sh database update` tekrar | 33 sn | Tamam |
+| `scripts/run-api.sh` ile `/health/ready` | 38 sn | 200 |
+| `cd web/admin`, `npm ci`, `npm start` (**README'de yok**; komutlar CLAUDE.md'den) | 84 sn | `http://localhost:4200/` 200 |
+
+**Bulunan eksikler:**
+1. **Restore adımı yok.** README'de `scripts/ef.sh database update`'ten önce `dotnet restore` (veya `dotnet build`) adımı yok. Temiz bir klonda migration'lar uygulanamıyor.
+2. **Admin uygulaması anlatılmıyor.** README admin uygulamasının nasıl çalıştırılacağını hiç anlatmıyor (`web/admin` içinde `npm ci`, `npm start`; Node sürümü `.nvmrc`'de).
+3. **Not, eksik değil:** 5432'yi başka bir PostgreSQL kullanıyorsa `docker compose up` açık bir hatayla durur ve README port notunu veriyor. Ama bu adım atlanırsa API o PostgreSQL'e bağlanmaya çalışır ve sadece `/health/ready` 503 görülür.
+
+Öneri: 1. ve 2. küçük bir README düzeltmesiyle giderilir. Bu düzeltme, "README'deki komutlarla çalışıyor" kriterini "Evet" yapar.
 
 ## 3. Kalite özeti
 
@@ -54,7 +84,7 @@ Tamamlanmayan maddeler ve nedenleri:
 | Testler (birim / entegrasyon / mimari / e2e) | Backend 9 (`dotnet test`), frontend 2 (`npm run test:ci`). Entegrasyon testi henüz yok (P1-08), e2e yok (P1-36). |
 | CI süresi | ~3 dk (run 42025941179). En uzun job `images`, 3 dk; `backend` 1 dk; `frontend` 1 dk 15 sn |
 | Açık hatalar (önem derecesine göre) | Yok |
-| Bilinen teknik borç (bağlı issue'lar) | #12 (exit code 8 istisnası, Faz 1); #39 (Dependabot gözlemleri, Faz 0 milestone'unda açık); `type:idea`: #57, #59, #60 |
+| Bilinen teknik borç (bağlı issue'lar) | #12 (exit code 8 istisnası, Faz 1); #39 (Dependabot gözlemleri; Faz 1 milestone'una taşındı); `type:idea`: #57, #59, #60 |
 | Bağımlılık güvenlik açıkları | NuGet ve npm denetimi CI'da high/critical 0. Kendi imajlarımızda (API, admin, migrator) Trivy high/critical 0. Üçüncü taraf imajların bulguları #53'te (Deploy bloğu) |
 | Geri yükleme tatbikatı sonucu (RTO) | Yok; P0-32 ile Deploy bloğunda |
 
@@ -64,24 +94,24 @@ Sadece değişmesi önerilen kararlar. Listelenmeyen her `Accepted` karar için 
 
 | ID | Karar | Hâlâ doğru mu? Bu fazdan notlar | Sahibin seçimi: Koru / Değiştir / Kaldır |
 | --- | --- | --- | --- |
-| DEC-063 | "… uçtan uca testler staging deploy'undan sonra; tüm tarayıcılarda gecelik" | Hayır. Staging yok (DEC-094). Bu haliyle P1-36'daki Playwright testleri çalışacak bir yer bulamaz. Öneri: Deploy bloğu açılana kadar uçtan uca testler CI'da, yerelde çalıştırılan uygulamaya (compose, API, admin) karşı çalışır; blok açılınca staging'e döner. | |
-| DEC-027 | "MediatR veya AutoMapper yok: projeye ait dispatcher ve elle mapping (DEC-046 ile netleştirildi: ayrı dispatcher sınıfı yok)" | İlk cümle ("projeye ait dispatcher") ile DEC-046 ("ayrı dispatcher sınıfı yok") birbiriyle çelişiyor; CLAUDE.md DEC-046'yı izliyor. Öneri: DEC-027 `Superseded by DEC-046` olur; anlam değişmez, sadece çelişki kalkar. | |
+| DEC-063 | "… uçtan uca testler staging deploy'undan sonra; tüm tarayıcılarda gecelik" | Hayır. Staging yok (DEC-094); bu haliyle P1-36'daki Playwright testleri çalışacak bir yer bulamaz. | **Değiştir** → DEC-095: staging yokken uçtan uca testler CI'da başlatılan uygulamaya karşı çalışır; Deploy bloğu açılınca staging'e döner. Karar günlüğüne işlendi (DEC-063 `Superseded by DEC-095`). |
+| DEC-027 | "MediatR veya AutoMapper yok: projeye ait dispatcher ve elle mapping (DEC-046 ile netleştirildi: ayrı dispatcher sınıfı yok)" | İlk cümle ("projeye ait dispatcher") ile DEC-046 ("ayrı dispatcher sınıfı yok") çelişiyor; CLAUDE.md DEC-046'yı izliyor. | **Değiştir** → `Superseded by DEC-046`. Karar günlüğüne işlendi. |
 
 **Not, değişiklik değil:**
 - DEC-082 – DEC-091 (barındırma, alan adı, Caddy, R2, Seq, alt alan adları, GHCR, ayrı PostgreSQL, age) Deploy bloğuyla birlikte uykuda. Öneri: *Koru*; blok açıldığında DEC-082'deki 2026-11-04 tarihli fiyat ve stok bilgileri yeniden doğrulanır.
-- DEC-080'in amacı (high/critical bulgu CI'ı kırar), kendi imajlarımız için `images` zorunlu check olunca tam uygulanmış olur (bölüm 2).
+- DEC-080'in amacı (high/critical bulgu CI'ı kırar), `images` zorunlu check olunca kendi imajlarımız için tam uygulanmış oldu (bölüm 2).
 
 Sonraki faz için önerilen yeni kararlar:
 
 | Öneri | Neden | Değerlendirilen seçenekler | Sahibin seçimi: Kabul / Ret / Ertele |
 | --- | --- | --- | --- |
-| `images` job'ı zorunlu check olur | Bölüm 2: Trivy ve duman testleri merge'i engellemiyor | (a) `images` zorunlu olur (CI ~3 dk, en uzun job). (b) Olduğu gibi kalır; bulgu sadece `main`'deki yayımlamayı durdurur. | |
-| Faz 1 boyunca altyapı ve güvenlik araçlarıyla ilgili yeni fikirler, bir şeyi gerçekten kırmadıkça `type:idea` olarak bekler | Sahibin talebi (2026-11-05); Faz 0'ın uzamasının ana nedeni (bölüm 5) | Kural olarak CLAUDE.md'nin "Kapsam disiplini" bölümüne de eklenir | |
+| `images` job'ı zorunlu check olur | Taslakta: Trivy ve duman testleri merge'i engellemiyordu | (a) `images` zorunlu olur (CI ~3 dk, en uzun job). (b) Olduğu gibi kalır; bulgu sadece `main`'deki yayımlamayı durdurur. | **Kabul (a).** Sahip 2026-11-05'te ruleset'e ekledi; CLAUDE.md güncellendi. |
+| Faz 1 boyunca altyapı ve güvenlik araçlarıyla ilgili yeni fikirler, bir şeyi gerçekten kırmadıkça `type:idea` olarak bekler | Sahibin talebi (2026-11-05); Faz 0'ın uzamasının ana nedeni (bölüm 5) | Kural olarak CLAUDE.md'nin "Kapsam disiplini" bölümüne de eklenir | Sahibin talebi olarak geçerli. CLAUDE.md'ye eklenip eklenmeyeceği sahibin kararı. |
 
 ## 5. Retrospektif
 
 - **Ne iyi gitti:**
-  - Her şey geri izlenebilir: 94 karar (#64 ile), 10 ADR. Her PR bir roadmap maddesine bağlı.
+  - Her şey geri izlenebilir: 95 karar, 10 ADR. Her PR bir roadmap maddesine bağlı.
   - CI ve imajlar yeniden üretilebilir: lock dosyaları, tag ve digest ile sabitlenmiş imajlar. `main`'e giden imaj, test edilen imajla birebir aynı.
   - Gizli bilgi repoya, imajlara veya loglara girmedi.
   - "Önce doğrula" ve kırmızı demo alışkanlığı iki yanlış varsayımı merge'den önce yakaladı:
@@ -134,14 +164,14 @@ Sonraki faz için önerilen yeni kararlar:
 
 - [x] Faz 1'in detaylı görevleri `docs/roadmap.md`'ye yazıldı (P1-01 – P1-40)
 - [ ] Faz 1 için GitHub issue'ları ve milestone oluşturuldu: milestone var (`Phase 1 – MVP (v0.1.0)`). Issue'lar her maddeye başlanırken açılıyor (P0-33 iptal).
-- [ ] Bölüm 4'teki karar değişiklikleri uygulandı (yeni ADR'lar, karar günlüğü güncellendi)
+- [x] Bölüm 4'teki karar değişiklikleri uygulandı: DEC-095 eklendi; DEC-063 ve DEC-027'nin yerine geçildi. Yeni ADR gerekmedi; ADR-0008 kabul edilmiş olduğu için düzenlenmedi, DEC-095 onu netleştiriyor.
 - [ ] Sürüm etiketlendi: `v0.0.1`
 
 **Sahibin karar vermesi gereken açık noktalar:**
-- Bölüm 4'teki iki karar ve iki öneri.
-- `images` zorunlu check önerisi (bölüm 2). Kabul edilirse ruleset değişikliğini sahip yapar.
-- #39 (Dependabot gözlemleri) Faz 0 milestone'unda açık. Öneri: Faz 1 milestone'una taşınır.
-- 15 dakika kriterinin ölçümü (bölüm 2).
+- README'deki iki eksik (bölüm 2): bu PR'da mı, ayrı bir PR'da mı düzeltilsin?
+- `type:idea` kuralı CLAUDE.md'ye eklensin mi (bölüm 4)?
+
+**Sahibin kararlarıyla kapananlar (2026-11-05):** DEC-063 → DEC-095; DEC-027 → `Superseded by DEC-046`; `images` zorunlu check; #39 Faz 1 milestone'unda; 15 dakika ölçümü yapıldı.
 
 **Onay**
 

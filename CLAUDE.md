@@ -183,7 +183,7 @@ GitHub'daki bir duruma bağlı her işlemden önce (branch silmek, bir PR'a push
 5. **Merge'i sahip yapar.** PR'ı açtıktan sonra dur ve bana bildir. İnceleme yorumlarını aynı branch'te yeni commit'lerle düzelt.
    - Açık bir PR'a push etmeden önce PR'ın hâlâ açık olduğunu `gh pr view --json state` ile kontrol et. Kapanmışsa dur ve sor.
    - Bir PR'a yeni commit ekledikten sonra, "PR güncellendi, merge'e hazır" diyerek açıkça bildir. Sahip, bu bildirimi almadan merge etmez.
-   - "Merge'e hazır" bildirimi sadece zorunlu check'ler (`backend`, `frontend`, `repo-checks`) yeşilken yapılır.
+   - "Merge'e hazır" bildirimi sadece zorunlu check'ler (`backend`, `frontend`, `repo-checks`, `images`) yeşilken yapılır.
    - `main`'de "Require branches to be up to date before merging" açık. `main` ilerlediği için PR güncel değilse, güncel `main`'i branch'e merge et (rebase veya force push yok), çakışmaları çöz ve CI yeşil olduktan sonra "PR güncellendi, merge'e hazır" de. Aynı dosyaya dokunan PR'lar birer birer merge edilir; her merge'den sonra diğer PR güncellenir.
    - Branch'e push etmeden önce remote'taki değişiklikleri al (`git pull`); sahip GitHub'daki "Update branch" düğmesini kullanmış olabilir.
 6. **Merge sonrası:** Ben "merge edildi" dediğimde `git switch main && git pull` yap ve yerel branch'i sil.
