@@ -31,4 +31,12 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
+  <!-- The migrator image builds a self-contained linux-x64 migration bundle from the src projects (ADR-0011).
+       Restoring them for linux-x64 as well puts that runtime's graph into their lock files, so the bundle is
+       built under locked mode too. The .NET runtime packs the bundle embeds are not recorded in lock files;
+       NuGet's signature verification covers them instead (DEC-093). Test projects are not bundled. -->
+  <PropertyGroup Condition="$([MSBuild]::MakeRelative('$(MSBuildThisFileDirectory)', '$(MSBuildProjectDirectory)').StartsWith('src'))">
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
 </Project>
