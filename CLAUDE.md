@@ -163,6 +163,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - Üzerinde çalıştığın roadmap maddesinde olmayan bir iyileştirme fark edersen onu yapma; `type:idea` etiketli bir issue aç ve bana tek cümleyle bildir.
 - İstisnalar: bir güvenlik açığı, veri kaybı riski veya maddenin kabul kriterlerini engelleyen bir sorun. Bunlarda dur ve sor.
 - Bir maddenin kabul kriterleri karşılandıysa iş biter; 'daha iyi olabilir' yeni bir issue'dur.
+- Faz 1 boyunca altyapı ve güvenlik araçlarıyla ilgili yeni fikirler, bir şeyi gerçekten kırmadıkça `type:idea` olarak bekler (Faz 0 geçişi, `docs/phases/phase-0-gate.md` §4 ve §5).
 
 ## GitHub iş akışı
 
