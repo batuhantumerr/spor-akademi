@@ -1,6 +1,6 @@
 # Runs on every pull request to main and on every push to main (P0-28). The job names (backend, frontend,
 # repo-checks, images) are the status checks that branch protection requires, so rename them only together with
-# the ruleset.
+# the ruleset. On a push to main, the publish job then pushes the tested images to GHCR (P0-31).
 name: CI
 
 on:
@@ -9,14 +9,15 @@ on:
   push:
     branches: [main]
 
-# Least privilege: the jobs only read the repository.
+# Least privilege: the jobs only read the repository; only the publish job may write packages.
 permissions:
   contents: read
 
-# A new commit on the same pull request cancels the run for the previous one.
+# A new commit on the same pull request cancels the run for the previous one. Runs on main are never
+# cancelled: every commit on main must publish its images, so that any of them can be deployed (DEC-089).
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   backend:
@@ -129,13 +130,20 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     # No secrets are used here; the token stays read-only (workflow permissions) and is not stored on disk.
+    env:
+      # source links the GHCR package to this repository; revision records the commit the image was built from.
+      IMAGE_SOURCE: ${{ github.server_url }}/${{ github.repository }}
+      IMAGE_REVISION: ${{ github.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Build API image
-        run: docker build --file docker/api/Dockerfile --tag spor-akademi-api:ci .
+        run: >-
+          docker build --file docker/api/Dockerfile --tag spor-akademi-api:ci
+          --label "org.opencontainers.image.source=$IMAGE_SOURCE"
+          --label "org.opencontainers.image.revision=$IMAGE_REVISION" .
 
       - name: Smoke test API image
         run: scripts/smoke-test-api-image.sh spor-akademi-api:ci
@@ -155,7 +163,10 @@ jobs:
           format: table
 
       - name: Build admin image
-        run: docker build --file docker/admin/Dockerfile --tag spor-akademi-admin:ci .
+        run: >-
+          docker build --file docker/admin/Dockerfile --tag spor-akademi-admin:ci
+          --label "org.opencontainers.image.source=$IMAGE_SOURCE"
+          --label "org.opencontainers.image.revision=$IMAGE_REVISION" .
 
       - name: Smoke test admin image
         run: scripts/smoke-test-admin-image.sh spor-akademi-admin:ci
@@ -169,3 +180,59 @@ jobs:
           severity: HIGH,CRITICAL
           exit-code: "1"
           format: table
+
+      # On main, the images that passed the smoke tests and the scans are handed to the publish job as they
+      # are; publish does not rebuild them, so what is pushed is exactly what was tested (P0-31).
+      - name: Save images
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker save --output images.tar spor-akademi-api:ci spor-akademi-admin:ci
+
+      - name: Upload images
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: images
+          path: images.tar
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    name: publish
+    # Only after every check has passed, and only for commits on main; pull requests never publish.
+    needs: [backend, frontend, repo-checks, images]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # The only job that may write packages (GHCR). The images are public (DEC-089) and contain no secrets.
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The download fails if the artifact's digest differs from the one recorded at upload.
+      - name: Download images
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: images
+
+      - name: Load images
+        run: docker load --input images.tar
+
+      # docker login stores the token in ~/.docker/config.json for the rest of the job; the last step logs out.
+      - name: Log in to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+      # Tag: the full commit SHA only (DEC-089). Image names must be lowercase.
+      - name: Publish images
+        run: >-
+          scripts/publish-images.sh "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" "$GITHUB_SHA"
+          spor-akademi-api:ci spor-akademi-admin:ci
+
+      - name: Log out of GHCR
+        if: always()
+        run: docker logout ghcr.io
