@@ -195,6 +195,7 @@ GitHub'daki bir duruma bağlı her işlemden önce (branch silmek, bir PR'a push
 - Kabul edilmiş bir ADR'ı düzenlemek.
 - Onay almadan yeni bir NuGet veya npm paketi eklemek; paket yükleyen bir komut (`ng add`, `npm create` vb.) çalıştırmadan önce hangi paketleri ekleyeceğini kontrol etmemek.
 - Uygulanmış bir migration'ı düzenlemek veya silmek.
+- Migration bundle'ını yerelde üretmek (`dotnet ef migrations bundle`). Bundle sadece migrator imajında üretilir (DEC-093); yerelde üretmek, restore'u makinenin RID'iyle yaptığı için lock dosyalarına o RID'in bölümünü (ör. `win-x64`) yazar.
 - Uyarıları bastırmak, analyzer kurallarını kapatmak veya CI'ı testleri geçirmek için değiştirmek.
 - `main`'e doğrudan push etmek veya force push yapmak.
 - Bir yeniden yapılandırmayı (refactoring) istenen işin içine gizlemek.
