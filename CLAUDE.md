@@ -163,6 +163,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - Üzerinde çalıştığın roadmap maddesinde olmayan bir iyileştirme fark edersen onu yapma; `type:idea` etiketli bir issue aç ve bana tek cümleyle bildir.
 - İstisnalar: bir güvenlik açığı, veri kaybı riski veya maddenin kabul kriterlerini engelleyen bir sorun. Bunlarda dur ve sor.
 - Bir maddenin kabul kriterleri karşılandıysa iş biter; 'daha iyi olabilir' yeni bir issue'dur.
+- Faz 1 boyunca altyapı ve güvenlik araçlarıyla ilgili yeni fikirler, bir şeyi gerçekten kırmadıkça `type:idea` olarak bekler (Faz 0 geçişi, `docs/phases/phase-0-gate.md` §4 ve §5).
 
 ## GitHub iş akışı
 
@@ -183,7 +184,7 @@ GitHub'daki bir duruma bağlı her işlemden önce (branch silmek, bir PR'a push
 5. **Merge'i sahip yapar.** PR'ı açtıktan sonra dur ve bana bildir. İnceleme yorumlarını aynı branch'te yeni commit'lerle düzelt.
    - Açık bir PR'a push etmeden önce PR'ın hâlâ açık olduğunu `gh pr view --json state` ile kontrol et. Kapanmışsa dur ve sor.
    - Bir PR'a yeni commit ekledikten sonra, "PR güncellendi, merge'e hazır" diyerek açıkça bildir. Sahip, bu bildirimi almadan merge etmez.
-   - "Merge'e hazır" bildirimi sadece zorunlu check'ler (`backend`, `frontend`, `repo-checks`) yeşilken yapılır.
+   - "Merge'e hazır" bildirimi sadece zorunlu check'ler (`backend`, `frontend`, `repo-checks`, `images`) yeşilken yapılır.
    - `main`'de "Require branches to be up to date before merging" açık. `main` ilerlediği için PR güncel değilse, güncel `main`'i branch'e merge et (rebase veya force push yok), çakışmaları çöz ve CI yeşil olduktan sonra "PR güncellendi, merge'e hazır" de. Aynı dosyaya dokunan PR'lar birer birer merge edilir; her merge'den sonra diğer PR güncellenir.
    - Branch'e push etmeden önce remote'taki değişiklikleri al (`git pull`); sahip GitHub'daki "Update branch" düğmesini kullanmış olabilir.
 6. **Merge sonrası:** Ben "merge edildi" dediğimde `git switch main && git pull` yap ve yerel branch'i sil.

@@ -94,6 +94,7 @@ Kullanıcılar ve yetkiler `docker/postgres/initdb/10-create-roles.sh` ile kurul
 
 ```bash
 dotnet tool restore                           # ilk seferde: dotnet-ef'i .config/dotnet-tools.json'daki sürümle kurar
+dotnet restore                                # ilk seferde: NuGet paketleri (dotnet-ef kendi restore'unu yapmaz)
 scripts/ef.sh --check-env                     # .env'deki şifreler kurala uyuyor mu (sadece harf ve rakam)
 scripts/ef.sh database update                 # bekleyen migration'ları uygula
 scripts/ef.sh migrations add <Ad>             # yeni migration
@@ -110,6 +111,16 @@ Production'da migration'ların nasıl uygulandığı ADR-0011'de anlatılır.
 scripts/run-api.sh
 curl http://localhost:5073/health/live    # süreç ayakta: 200 Healthy
 curl http://localhost:5073/health/ready   # veritabanına erişilebiliyor: 200 Healthy, değilse 503 Unhealthy
+```
+
+### Admin uygulaması
+
+Komutlar `web/admin` içinde çalışır. Node sürümü `web/admin/.nvmrc`'dedir; yanlış sürümde `npm ci` hata verir.
+
+```bash
+cd web/admin
+npm ci       # ilk seferde: bağımlılıkları lock dosyasına birebir uyarak kurar
+npm start    # geliştirme sunucusu: http://localhost:4200
 ```
 
 ## Lisans
