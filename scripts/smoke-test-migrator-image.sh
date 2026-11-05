@@ -113,10 +113,11 @@ privileges=$(psql_as_postgres "
   ORDER BY 1")
 grep -qx 'public.__ef_migrations_history false' <<< "$privileges" \
   || fail "spor_akademi_app can read the migrations history"
+# Every other table must be readable. There are none until the modules add theirs (the first migration is
+# empty), so this check starts to bite with the first module table.
 app_tables=$(grep -v '^public.__ef_migrations_history ' <<< "$privileges" || true)
-[[ -n $app_tables ]] || fail "the bundle created no tables besides the migrations history"
 if grep -q ' false$' <<< "$app_tables"; then fail "spor_akademi_app cannot read: $(grep ' false$' <<< "$app_tables")"; fi
-echo "spor_akademi_app: reads $(wc -l <<< "$app_tables") tables, not the migrations history."
+echo "spor_akademi_app: reads all $(grep -c . <<< "$app_tables" || true) other tables, not the migrations history."
 
 # --- Second run: nothing left to apply ---
 output=$(run_bundle "$SPOR_AKADEMI_MIGRATOR_PASSWORD") || { echo "$output" >&2; fail "second run failed"; }

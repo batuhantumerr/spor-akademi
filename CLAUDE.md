@@ -65,6 +65,9 @@ docker build --file docker/api/Dockerfile --tag spor-akademi-api:local .
 scripts/smoke-test-api-image.sh spor-akademi-api:local
 docker build --file docker/admin/Dockerfile --tag spor-akademi-admin:local .
 scripts/smoke-test-admin-image.sh spor-akademi-admin:local
+# Migrator imajı: migration bundle'ı ve SQL script (ADR-0011); duman testi geçici bir PostgreSQL'e uygular
+docker build --file docker/migrator/Dockerfile --tag spor-akademi-migrator:local .
+scripts/smoke-test-migrator-image.sh spor-akademi-migrator:local
 
 # İmaj yayımlama (P0-31): CI main'de GHCR'ye gönderir. Yerelde geçici bir registry'ye karşı denenir.
 docker run --detach --name spor-akademi-registry --publish 127.0.0.1:5000:5000 registry:3.1.2@sha256:d4032d4cc323c1731c707931ecada07a53076eac38e3b61ae57533f170f2c6c3
