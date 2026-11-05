@@ -44,10 +44,10 @@ Tamamlanmayan maddeler ve nedenleri:
 | Tüm planlama dokümanları onaylı ve repoda | Evet | Bölüm 1, P0-01 – P0-20 |
 | CI tüm kontrolleri zorunlu kılıyor: zorunlu check'ler geçmeden `main`'e merge edilemiyor | Evet | `main`'in ruleset'i `backend`, `frontend`, `repo-checks` ve `images`'ı (kaynak GitHub Actions) zorunlu kılıyor; "branch güncel olmalı" kuralı açık (`gh api repos/batuhantumerr/spor-akademi/rules/branches/main`, 2026-11-05). `images`'ı sahip 2026-11-05'te ekledi. Bu taslak hazırlanırken `images` zorunlu değildi; duman testleri ve Trivy (DEC-080) merge'i engellemiyordu. CLAUDE.md'deki "merge'e hazır" listesi buna göre güncellendi. |
 | İmajlar (API, admin, migrator) `main`'den GHCR'de yayımlanıyor | Evet | `main` run 42025184307 (`5fa28a4`) başarılı. Paketlerin public olduğu ve kimlik bilgisi olmadan çekilebildiği #58 ve #61'de doğrulandı. |
-| Uygulama yerelde, README'deki komutlarla çalışıyor | **Kısmen** | Çalışan kopyada 2026-11-05'te çalıştı: compose, `scripts/ef.sh database update`, `scripts/run-api.sh` ile `/health/ready` 200, `npm start` ile admin 200. Temiz klonda ise README'yi adım adım izlemek yetmiyor; aşağıdaki iki eksik var. |
-| Yeni bir geliştirici README ile projeyi 15 dakikanın altında yerelde başlatabilir | Evet, iki eksik giderilerek | Temiz klon, 2026-11-05: klondan admin açılana kadar **84 sn**. Ayrıntılar aşağıda. |
+| Uygulama yerelde, README'deki komutlarla çalışıyor | Evet | Temiz klon, sadece README izlenerek (2026-11-05, `28f0160`): `/health/ready` 200, admin `http://localhost:4200/` 200. Ayrıntılar aşağıda. |
+| Yeni bir geliştirici README ile projeyi 15 dakikanın altında yerelde başlatabilir | Evet | Aynı ölçüm: klondan admin açılana kadar **88 sn** |
 
-**Temiz klon ölçümü (2026-11-05).** Repo geçici bir klasöre klonlandı ve README adım adım izlendi.
+**Temiz klon ölçümü (2026-11-05).** Repo geçici bir klasöre klonlandı ve README adım adım izlendi. Ölçüm iki kez yapıldı.
 
 Ortam, yeni bir makineye mümkün olduğunca yakın kuruldu:
 - NuGet paket klasörü ve npm önbelleği boş geçici klasörlere yönlendirildi.
@@ -59,23 +59,27 @@ Sınırlar:
 
 Aynı makinede çalıştığı için klonun compose proje adı farklıydı (`COMPOSE_PROJECT_NAME`); README'den tek sapma bu.
 
+**İlk deneme (`5fa28a4`): README yetmedi.** İki eksik bulundu:
+1. **Restore adımı yoktu.** `scripts/ef.sh database update`'ten önce restore veya build adımı olmadığı için komut `NETSDK1004` ile başarısız oldu (`project.assets.json` yok); `dotnet ef` kendi restore'unu yapmıyor.
+2. **Admin uygulaması anlatılmıyordu.** README admin uygulamasının nasıl çalıştırılacağını hiç anlatmıyordu.
+
+İki eksik README dışından giderilince süre 84 sn oldu.
+
+**Düzeltme (bu PR):** README'ye `dotnet restore` adımı ve "Admin uygulaması" bölümü (`npm ci`, `npm start`, Node sürümü `.nvmrc`'de) eklendi.
+
+**İkinci deneme (`28f0160`): sadece README izlendi.** README dışından hiçbir adım gerekmedi.
+
 | Adım (README sırası) | Süre (başlangıçtan) | Sonuç |
 | --- | --- | --- |
-| `git clone`, `git config core.hooksPath .githooks` | 1 sn | Tamam |
-| `cp .env.example .env`, şifreler `openssl rand -hex 24` ile | 2 sn | Tamam. Bu makinede 5432'yi Windows'a kurulu başka bir PostgreSQL kullanıyor; README'deki not izlenerek `POSTGRES_HOST_PORT=5433` yapıldı. |
-| `docker compose up -d --wait` (imajlar çekildi) | 20 sn | Tamam |
-| `dotnet tool restore`, `scripts/ef.sh --check-env` | 21 sn | Tamam |
-| `scripts/ef.sh database update` | 22 sn | **Başarısız** (`NETSDK1004`, `project.assets.json` yok). `dotnet ef` kendi restore'unu yapmıyor; README'de `ef.sh`'tan önce restore veya build adımı yok. |
-| `dotnet restore` (README'de yok), `ef.sh database update` tekrar | 33 sn | Tamam |
-| `scripts/run-api.sh` ile `/health/ready` | 38 sn | 200 |
-| `cd web/admin`, `npm ci`, `npm start` (**README'de yok**; komutlar CLAUDE.md'den) | 84 sn | `http://localhost:4200/` 200 |
+| `git clone`, `git config core.hooksPath .githooks` | 4 sn | Tamam |
+| `cp .env.example .env`, şifreler `openssl rand -hex 24` ile | 5 sn | Tamam. Bu makinede 5432'yi Windows'a kurulu başka bir PostgreSQL kullanıyor; README'deki not izlenerek `POSTGRES_HOST_PORT=5433` yapıldı. |
+| `docker compose up -d --wait` (imajlar çekildi) | 25 sn | Tamam |
+| `dotnet tool restore`, `dotnet restore` | 31 sn | Tamam |
+| `scripts/ef.sh --check-env`, `scripts/ef.sh database update` | 39 sn | Tamam |
+| `scripts/run-api.sh` ile `/health/live` ve `/health/ready` | 44 sn | 200, 200 |
+| `cd web/admin`, `npm ci`, `npm start` | 88 sn | `http://localhost:4200/` 200 |
 
-**Bulunan eksikler:**
-1. **Restore adımı yok.** README'de `scripts/ef.sh database update`'ten önce `dotnet restore` (veya `dotnet build`) adımı yok. Temiz bir klonda migration'lar uygulanamıyor.
-2. **Admin uygulaması anlatılmıyor.** README admin uygulamasının nasıl çalıştırılacağını hiç anlatmıyor (`web/admin` içinde `npm ci`, `npm start`; Node sürümü `.nvmrc`'de).
-3. **Not, eksik değil:** 5432'yi başka bir PostgreSQL kullanıyorsa `docker compose up` açık bir hatayla durur ve README port notunu veriyor. Ama bu adım atlanırsa API o PostgreSQL'e bağlanmaya çalışır ve sadece `/health/ready` 503 görülür.
-
-Öneri: 1. ve 2. küçük bir README düzeltmesiyle giderilir. Bu düzeltme, "README'deki komutlarla çalışıyor" kriterini "Evet" yapar.
+**Not, eksik değil:** 5432'yi başka bir PostgreSQL kullanıyorsa `docker compose up` açık bir hatayla durur ve README port notunu veriyor. Ama bu adım atlanırsa API o PostgreSQL'e bağlanmaya çalışır ve sadece `/health/ready` 503 görülür.
 
 ## 3. Kalite özeti
 
@@ -106,7 +110,7 @@ Sonraki faz için önerilen yeni kararlar:
 | Öneri | Neden | Değerlendirilen seçenekler | Sahibin seçimi: Kabul / Ret / Ertele |
 | --- | --- | --- | --- |
 | `images` job'ı zorunlu check olur | Taslakta: Trivy ve duman testleri merge'i engellemiyordu | (a) `images` zorunlu olur (CI ~3 dk, en uzun job). (b) Olduğu gibi kalır; bulgu sadece `main`'deki yayımlamayı durdurur. | **Kabul (a).** Sahip 2026-11-05'te ruleset'e ekledi; CLAUDE.md güncellendi. |
-| Faz 1 boyunca altyapı ve güvenlik araçlarıyla ilgili yeni fikirler, bir şeyi gerçekten kırmadıkça `type:idea` olarak bekler | Sahibin talebi (2026-11-05); Faz 0'ın uzamasının ana nedeni (bölüm 5) | Kural olarak CLAUDE.md'nin "Kapsam disiplini" bölümüne de eklenir | Sahibin talebi olarak geçerli. CLAUDE.md'ye eklenip eklenmeyeceği sahibin kararı. |
+| Faz 1 boyunca altyapı ve güvenlik araçlarıyla ilgili yeni fikirler, bir şeyi gerçekten kırmadıkça `type:idea` olarak bekler | Sahibin talebi (2026-11-05); Faz 0'ın uzamasının ana nedeni (bölüm 5) | Kural olarak CLAUDE.md'nin "Kapsam disiplini" bölümüne de eklenir | **Kabul.** CLAUDE.md'nin "Kapsam disiplini" bölümüne eklendi. |
 
 ## 5. Retrospektif
 
@@ -167,11 +171,9 @@ Sonraki faz için önerilen yeni kararlar:
 - [x] Bölüm 4'teki karar değişiklikleri uygulandı: DEC-095 eklendi; DEC-063 ve DEC-027'nin yerine geçildi. Yeni ADR gerekmedi; ADR-0008 kabul edilmiş olduğu için düzenlenmedi, DEC-095 onu netleştiriyor.
 - [ ] Sürüm etiketlendi: `v0.0.1`
 
-**Sahibin karar vermesi gereken açık noktalar:**
-- README'deki iki eksik (bölüm 2): bu PR'da mı, ayrı bir PR'da mı düzeltilsin?
-- `type:idea` kuralı CLAUDE.md'ye eklensin mi (bölüm 4)?
+**Sahibin karar vermesi gereken açık noktalar:** yok.
 
-**Sahibin kararlarıyla kapananlar (2026-11-05):** DEC-063 → DEC-095; DEC-027 → `Superseded by DEC-046`; `images` zorunlu check; #39 Faz 1 milestone'unda; 15 dakika ölçümü yapıldı.
+**Sahibin kararlarıyla kapananlar (2026-11-05):** DEC-063 → DEC-095; DEC-027 → `Superseded by DEC-046`; `images` zorunlu check; #39 Faz 1 milestone'unda; README'deki iki eksik düzeltildi ve temiz klonla yeniden ölçüldü; `type:idea` kuralı CLAUDE.md'de.
 
 **Onay**
 
