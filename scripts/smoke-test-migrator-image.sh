@@ -16,12 +16,18 @@ set -euo pipefail
 export MSYS_NO_PATHCONV=1
 
 image=${1:?usage: scripts/smoke-test-migrator-image.sh <image>}
-postgres_image=postgres:18.6-trixie@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
 network=spor-akademi-migrator-smoke
 db=spor-akademi-migrator-smoke-db
 probe=spor-akademi-migrator-smoke-probe
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# The same PostgreSQL image as the local environment: compose.yaml is its single source (read as text;
+# `docker compose config` would print the secrets from .env).
+postgres_image=$(sed -nE 's/^    image: (postgres:[^[:space:]]+)$/\1/p' compose.yaml)
+[[ $postgres_image =~ ^postgres:[^@]+@sha256:[0-9a-f]{64}$ ]] \
+  || { echo "smoke test: no PostgreSQL image pinned by tag and digest in compose.yaml" >&2; exit 1; }
+echo "PostgreSQL: $postgres_image"
 
 POSTGRES_PASSWORD=$(openssl rand -hex 24)
 SPOR_AKADEMI_MIGRATOR_PASSWORD=$(openssl rand -hex 24)
