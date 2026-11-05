@@ -1,7 +1,7 @@
 # Faz 0 Geçişi — Temel
 
 > Repodaki yeri: `docs/phases/phase-0-gate.md` (`docs/phases/phase-gate-template.md` şablonundan kopyalandı)
-> Hazırlayan: Batuhan Tümer · Hazırlanma tarihi: 2026-11-05 · Durum: `Taslak`
+> Hazırlayan: Batuhan Tümer · Hazırlanma tarihi: 2026-11-05 · Durum: `Onaylandı`
 
 Bölüm 7 sahip tarafından imzalanmadan bir sonraki faz başlamaz.
 
@@ -177,6 +177,6 @@ Sonraki faz için önerilen yeni kararlar:
 
 **Onay**
 
-Onaylayan: Batuhan Tümer · Tarih: ____________
+Onaylayan: Batuhan Tümer · Tarih: 2026-11-05
 
 Yorumlar:

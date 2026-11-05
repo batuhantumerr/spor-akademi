@@ -133,7 +133,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 
 - [ ] ~~**P0-33** Faz 1'in her maddesi için GitHub issue'su açıldı~~ — iptal: issue'lar her maddeye başlanırken açılıyor (CLAUDE.md, GitHub iş akışı), bkz. değişiklik günlüğü
 - [ ] **P0-34** `v0.0.1` etiketi
-- [ ] **P0-35** Faz 0 geçişi → `docs/phases/phase-0-gate.md`, sahip tarafından onaylandı
+- [x] **P0-35** Faz 0 geçişi → `docs/phases/phase-0-gate.md`, sahip tarafından onaylandı (#66)
 
 **Çıkış kriterleri**
 
