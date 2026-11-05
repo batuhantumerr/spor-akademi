@@ -74,6 +74,8 @@ docker compose up -d --wait
 
 `.env`'deki şifreler ve veritabanı kullanıcıları sadece ilk başlatmada uygulanır. Şifre değiştirdiysen ortamı sıfırla.
 
+> **PostgreSQL Alpine varyantına geçti (2026-11-05):** Yerel ortamını bu tarihten önce kurduysan bir kez sıfırla (`docker compose down -v`). Eski veri dizini Debian (glibc) varyantıyla oluşturuldu. Alpine (musl) onu açabilir, ama metin sıralaması ve karşılaştırması farklı olduğu için metin indeksleri ve sıralama artık güvenilir olmaz. Yerel ortam, testler ve production aynı imajı kullanır; imaj `compose.yaml`'da tanımlıdır.
+
 ### Veritabanı kullanıcıları
 
 | Kullanıcı | Ne için | Şemayı değiştirebilir mi? |

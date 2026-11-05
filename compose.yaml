@@ -5,7 +5,12 @@ name: spor-akademi
 
 services:
   postgres:
-    image: postgres:18.6-trixie
+    # The single source of the PostgreSQL image: the migrator smoke test reads it from here, and so will the
+    # integration tests and the production compose file. Everything uses the same Alpine (musl) variant,
+    # because glibc and musl sort and compare text differently, and Turkish name search and ordering
+    # (DEC-013) must behave the same locally, in tests and in production. Pinned by tag and digest; Dependabot
+    # updates both (docker-compose ecosystem).
+    image: postgres:18.6-alpine@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?set POSTGRES_SUPERUSER_PASSWORD in .env (see .env.example)}
