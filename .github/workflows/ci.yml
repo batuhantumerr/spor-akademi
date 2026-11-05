@@ -181,11 +181,33 @@ jobs:
           exit-code: "1"
           format: table
 
+      # The migration bundle and its SQL script from one build (ADR-0011, DEC-089). The smoke test applies
+      # the bundle to a throwaway PostgreSQL. The bundle is a single-file executable, so Trivy sees the OS
+      # packages only; its NuGet packages are audited at restore (DEC-080).
+      - name: Build migrator image
+        run: >-
+          docker build --file docker/migrator/Dockerfile --tag spor-akademi-migrator:ci
+          --label "org.opencontainers.image.source=$IMAGE_SOURCE"
+          --label "org.opencontainers.image.revision=$IMAGE_REVISION" .
+
+      - name: Smoke test migrator image
+        run: scripts/smoke-test-migrator-image.sh spor-akademi-migrator:ci
+
+      - name: Scan migrator image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.1
+          image-ref: spor-akademi-migrator:ci
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          format: table
+
       # On main, the images that passed the smoke tests and the scans are handed to the publish job as they
       # are; publish does not rebuild them, so what is pushed is exactly what was tested (P0-31).
       - name: Save images
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker save --output images.tar spor-akademi-api:ci spor-akademi-admin:ci
+        run: docker save --output images.tar spor-akademi-api:ci spor-akademi-admin:ci spor-akademi-migrator:ci
 
       - name: Upload images
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -231,7 +253,7 @@ jobs:
       - name: Publish images
         run: >-
           scripts/publish-images.sh "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" "$GITHUB_SHA"
-          spor-akademi-api:ci spor-akademi-admin:ci
+          spor-akademi-api:ci spor-akademi-admin:ci spor-akademi-migrator:ci
 
       - name: Log out of GHCR
         if: always()
