@@ -26,7 +26,7 @@ API'nin döndüğü tüm hata ve uyarı kodlarının kataloğu. Kurallar:
 | --- | --- | --- |
 | `Email.Invalid` | Validation | Geçerli bir e-posta adresi girin. |
 | `PhoneNumber.Invalid` | Validation | Geçerli bir telefon numarası girin. |
-| `Slug.Invalid` | Validation | Sadece küçük harf, rakam ve tire kullanın. |
+| `Slug.Invalid` | Validation | 3–50 karakter; sadece küçük harf, rakam ve tek tire kullanın. |
 | `TimeRange.Invalid` | Validation | Bitiş saati başlangıç saatinden sonra olmalı. |
 | `BirthYearRange.Invalid` | Validation | Başlangıç yılı bitiş yılından büyük olamaz. |
 | `Money.Invalid` | Validation | Geçerli bir tutar girin. |
