@@ -230,8 +230,8 @@ Aynı transaction içinde, commit'ten önce işlenir; herhangi bir adım başar�
 
 | Value object | Kurallar |
 | --- | --- |
-| `Email` | Geçerli format, baştaki/sondaki boşluklar temizlenmiş, küçük harf |
-| `PhoneNumber` | E.164 formatına normalize edilir (`+905321234567`); böylece aynı numara her zaman aynı şekilde saklanır |
+| `Email` | Baştaki/sondaki boşluklar temizlenir, küçük harfe çevrilir. Format: tek `@`, yerel kısım en fazla 64, toplam en fazla 254 karakter, alan adında nokta, boşluk yok |
+| `PhoneNumber` | Sadece Türkiye numaraları. E.164 formatına normalize edilir (`+905321234567`); böylece aynı numara her zaman aynı şekilde saklanır. Ulusal numara 10 hanedir ve 2–5 ile başlar (sabit hat ve cep); boşluk, tire ve parantez yok sayılır |
 | `Money` | `decimal` tutar + ISO para birimi; aritmetik işlemler sadece aynı para birimiyle |
 | `BirthYearRange` | `From <= To`, makul yıllar |
 | `TimeRange` | `End > Start`, çakışma kontrolü |
@@ -239,7 +239,7 @@ Aynı transaction içinde, commit'ten önce işlenir; herhangi bir adım başar�
 | `YearMonth` | Yıl ve ay, karşılaştırılabilir |
 | `Address` | Adres satırı, ilçe, il |
 | `EmergencyContact` | Ad (zorunlu), `PhoneNumber` (zorunlu), yakınlık (zorunlu, serbest metin, en fazla 50 karakter) |
-| `Slug` | `^[a-z0-9]+(-[a-z0-9]+)*$` |
+| `Slug` | 3–50 karakter, `^[a-z0-9]+(-[a-z0-9]+)*$`; sessizce küçük harfe çevrilmez |
 | `RetentionPolicy` | Pozitif süreler |
 
 ## 8. Genel kurallar
