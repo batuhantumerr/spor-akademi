@@ -132,7 +132,7 @@ Tamamlanan her madde için `docs/learning/journal.md` dosyasına bir iki cümle 
 ### 3.5 Backlog ve faz geçişi
 
 - [ ] ~~**P0-33** Faz 1'in her maddesi için GitHub issue'su açıldı~~ — iptal: issue'lar her maddeye başlanırken açılıyor (CLAUDE.md, GitHub iş akışı), bkz. değişiklik günlüğü
-- [ ] **P0-34** `v0.0.1` etiketi
+- [x] **P0-34** `v0.0.1` etiketi (`badb652`, "Faz 0: Temel")
 - [x] **P0-35** Faz 0 geçişi → `docs/phases/phase-0-gate.md`, sahip tarafından onaylandı (#66)
 
 **Çıkış kriterleri**
@@ -157,7 +157,7 @@ Her kullanıcı hikayesi bir **dikey dilim (vertical slice)** olarak geliştiril
 
 ### 4.1 İterasyon 1.1 — Yapı taşları ve kimlik doğrulama
 
-- [ ] **P1-01** Domain yapı taşları: `Entity`, `AggregateRoot`, güçlü tipli ID'ler (UUID v7), domain event'leri, `Result` / `Error`
+- [x] **P1-01** Domain yapı taşları: `Entity`, `AggregateRoot`, güçlü tipli ID'ler (UUID v7), domain event'leri, `Result` / `Error` (#67)
 - [ ] **P1-02** Value object'ler: birim testleriyle `Email`, `PhoneNumber`, `Money`, `TimeRange`, `YearMonth`, `Slug`
 - [ ] **P1-03** Application pipeline'ı: command/query handler arayüzleri; loglama, doğrulama (FluentValidation) ve transaction decorator'ları; Scrutor ile kayıt
 - [ ] **P1-04** Kalıcılık (persistence) temeli: `DbContext`, entity yapılandırmaları, denetim interceptor'ı, `xmin` eşzamanlılık token'ları, commit sonrası domain event yayını. Migrator duman testindeki tablo erişim kontrolünün ilk modül tablosuyla gerçekten çalıştığı gösterilir (kırmızı demoyla).

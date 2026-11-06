@@ -126,7 +126,7 @@ Gerekçeleri ADR'lardadır. Bunlara uymayan kod yazma; uyamıyorsan dur ve sor.
 - **Domain event'leri (ADR-0009):** aynı transaction içinde işlenir; işleyicileri sadece veritabanı değişikliği yapar, dış sistem (e-posta vb.) çağırmaz.
 - **Kayıt kilitleri (ADR-0005):** öğrenci ve grup satırları sadece `IEnrollmentLocks` üzerinden ve her zaman önce öğrenci, sonra grup sırasıyla kilitlenir.
 - **Migration'lar (ADR-0011):** her zaman `spor_akademi_migrator` ile çalıştırılır (yerelde `scripts/ef.sh`); `postgres` ile çalıştırılırsa uygulama oluşan tablolara erişemez. API `Migrate()` / `EnsureCreated()` çağırmaz. Veritabanı adları snake_case (DEC-079).
-- **Zaman:** `TimeProvider` kullan; `DateTime.Now` / `UtcNow` yasak.
+- **Zaman:** `TimeProvider` kullan; `DateTime.Now` / `UtcNow` yasak. Bu kural iş kurallarındaki zaman içindir; UUID v7'nin içindeki zaman sadece sıralama amaçlı olduğu için istisnadır (`EntityId.New`, parametresiz `Guid.CreateVersion7()`).
 - **Diğer:** ID'ler UUID v7; para `decimal` + `Money`; genel soft delete yok, iş durumları var (`Archived`, `Left`, `Ended`, `Cancelled`).
 - **API (docs/api/overview.md):** `/api/v1`, durum geçişleri aksiyon endpoint'i (`POST /students/{id}/leave`), her endpoint tek bir yanıt şekli, düzenlenebilir kaynaklarda `version`.
 
