@@ -42,7 +42,7 @@ RUN export RestoreLockedMode=true \
 # The bundle is self-contained, so the runtime-deps image is enough: no .NET runtime or SDK, no shell, no
 # package manager, and a non-root user. Globalization runs in invariant mode (set by the image); migrations
 # do not format culture-specific text.
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.14-noble-chiseled@sha256:4309626281bfe550c0f6bb4242c435cd5cdabed1d05a5bc5843f659336f53296
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.14-noble-chiseled@sha256:e9346023014b406b9bc8be969b3aa4d39efa3a43b6abcc495f01be566acb10e9
 WORKDIR /migrations
 COPY --from=build /out/efbundle /out/migrations.sql ./
 USER app
