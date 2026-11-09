@@ -21,7 +21,7 @@ RUN dotnet publish src/SporAkademi.Api/SporAkademi.Api.csproj \
 
 # Chiseled: non-root user, no shell, no package manager. The -extra variant adds ICU and tzdata, which the
 # API needs for school time zones and tr-TR formats (PlatformRequirements fails at startup without them).
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.14-noble-chiseled-extra@sha256:9b755ea799ae649141a073e30d8b62d8095a5465af2b7694d17866e8c05131d8
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.14-noble-chiseled-extra@sha256:a9298ccc39c6258ae71228479e2f3f8d2ceb6639a9927262a4b0ff7d319a0e7e
 WORKDIR /app
 COPY --from=build /app .
 USER app
