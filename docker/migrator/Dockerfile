@@ -6,7 +6,7 @@
 #
 # Base images are pinned by tag and digest; Dependabot updates both (docker ecosystem).
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0.403-noble@sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.404-noble@sha256:fe0fd4e93bd2fbb47c883b7a6369e5c8d3db8bf01cdc5981f6ee35fbdf3ff4fb AS build
 WORKDIR /src
 
 # Restore first, from the project and build files only, so this layer is reused until a dependency changes.
@@ -42,7 +42,7 @@ RUN export RestoreLockedMode=true \
 # The bundle is self-contained, so the runtime-deps image is enough: no .NET runtime or SDK, no shell, no
 # package manager, and a non-root user. Globalization runs in invariant mode (set by the image); migrations
 # do not format culture-specific text.
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.14-noble-chiseled@sha256:4309626281bfe550c0f6bb4242c435cd5cdabed1d05a5bc5843f659336f53296
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.15-noble-chiseled@sha256:40eba5db69594d517c3a61e96bdacc2e3d6f8c99a44b52d55edee844d33518d0
 WORKDIR /migrations
 COPY --from=build /out/efbundle /out/migrations.sql ./
 USER app
