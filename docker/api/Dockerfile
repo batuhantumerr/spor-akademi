@@ -3,7 +3,7 @@
 #
 # Base images are pinned by tag and digest; Dependabot updates both (docker ecosystem).
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0.403-noble@sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.404-noble@sha256:fe0fd4e93bd2fbb47c883b7a6369e5c8d3db8bf01cdc5981f6ee35fbdf3ff4fb AS build
 WORKDIR /src
 
 # Restore first, from the project and build files only, so this layer is reused until a dependency changes.
@@ -21,7 +21,7 @@ RUN dotnet publish src/SporAkademi.Api/SporAkademi.Api.csproj \
 
 # Chiseled: non-root user, no shell, no package manager. The -extra variant adds ICU and tzdata, which the
 # API needs for school time zones and tr-TR formats (PlatformRequirements fails at startup without them).
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.14-noble-chiseled-extra@sha256:9b755ea799ae649141a073e30d8b62d8095a5465af2b7694d17866e8c05131d8
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.15-noble-chiseled-extra@sha256:cae5b962bfb786606def03d250c6a645cc98839095c89e806e4bd8978a68115b
 WORKDIR /app
 COPY --from=build /app .
 USER app
